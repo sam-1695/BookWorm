@@ -1,1 +1,30 @@
-<p>book-create works!</p>
+<mat-card>
+    <form (submit)="onAddBook(formPost)" #formPost="ngForm">
+      <mat-form-field>
+        <mat-label>Title</mat-label>
+        <input matInput type="text" [(ngModel)]="enterTitle" name="title" #title="ngModel" required>
+        @if(title.invalid) {
+        <mat-error>Enter Title</mat-error>
+        }
+      </mat-form-field>
+  
+      <mat-form-field>
+        <mat-label>Author</mat-label>
+        <input matInput type="text" [(ngModel)]="enterAuthor" name="author" #author="ngModel" required>
+        @if(author.invalid) {
+        <mat-error>Enter Author</mat-error>
+        }
+      </mat-form-field>
+  
+      <mat-form-field>
+        <mat-label>Description</mat-label>
+        <textarea matInput rows="6" [(ngModel)]="enterDescription" name="description" #description="ngModel" required>
+          </textarea>
+        @if(description.invalid) {
+        <mat-error>Enter Description</mat-error>
+        }
+      </mat-form-field>
+  
+      <button type='submit'>{{ mode === 'create' ? 'Save Book' : 'Update Book' }}</button>
+  </form>
+  </mat-card>
