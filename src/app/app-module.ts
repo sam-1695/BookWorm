@@ -51,7 +51,7 @@ import { FormsModule } from '@angular/forms';
   declarations: [App, BookCreate, BookList, FriendCreate, FriendList, Header],
   imports: [
     BrowserModule,
-    RouterModule.forRoot(routes), // 👈 This replaces RouterOutlet
+    RouterModule.forRoot(routes),
     MatButtonModule,
     MatCardModule,
     MatExpansionModule,
