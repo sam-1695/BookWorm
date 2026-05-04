@@ -1,18 +1,18 @@
 require("dotenv").config();
 const mongoose = require("mongoose");
-const User = require("./models/User");
+const List = require("../models/List");
 
 async function run() {
   try {
     await mongoose.connect(process.env.MONGO_URI);
 
-    const user = await User.create({
-      username: "testuser",
-      email: "testuser@example.com",
-      password: "123456",
+    const list = await List.create({
+      userId: "69f2c469d152726997ea9611",
+      name: "Favorites",
+      books: ["69f2c48162131ead02fe4cfc"],
     });
 
-    console.log("User created:", user);
+    console.log("List created:", list);
     process.exit();
   } catch (err) {
     console.error(err);

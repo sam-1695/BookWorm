@@ -1,6 +1,6 @@
 require("dotenv").config();
 const mongoose = require("mongoose");
-const Review = require("./models/Review");
+const Review = require("../models/Review");
 
 async function run() {
   try {
