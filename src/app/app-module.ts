@@ -8,7 +8,6 @@
 // import { FriendList } from './friend/friend-list/friend-list';
 // import { Header } from './header/header/header';
 
-
 // import { routes } from './app.router';
 // import { MatButtonModule } from '@angular/material/button';
 // import { MatCardModule } from '@angular/material/card';
@@ -46,9 +45,26 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { FormsModule } from '@angular/forms';
+import { Profile } from './pages/profile/profile';
+import { Friends } from './pages/friends/friends';
+import { Library } from './pages/library/library';
+import { Explore } from './pages/explore/explore';
+import { Navbar } from './components/navbar/navbar';
 
 @NgModule({
-  declarations: [App, BookCreate, BookList, FriendCreate, FriendList, Header],
+  declarations: [
+    App,
+    BookCreate,
+    BookList,
+    FriendCreate,
+    FriendList,
+    Header,
+    Profile,
+    Friends,
+    Library,
+    Explore,
+    Navbar,
+  ],
   imports: [
     BrowserModule,
     RouterModule.forRoot(routes),
