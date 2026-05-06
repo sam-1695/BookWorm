@@ -15,6 +15,15 @@
         <mat-error>Enter Author</mat-error>
         }
       </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Cover Photo URL</mat-label>
+        <input matInput type="text" [(ngModel)]="enterCoverPhoto" name="coverPhoto" #coverPhoto="ngModel">
+      </mat-form-field>
+
+      <div class="image-preview" *ngIf="enterCoverPhoto">
+        <img [src]="enterCoverPhoto" [alt]="enterTitle" style="max-width: 200px; margin-bottom: 1rem;">
+      </div>
   
       <mat-form-field>
         <mat-label>Description</mat-label>
