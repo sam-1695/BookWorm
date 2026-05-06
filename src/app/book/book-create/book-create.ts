@@ -15,6 +15,7 @@ import { NgForm } from '@angular/forms';
 export class BookCreate {
   enterTitle = '';
   enterAuthor = '';
+  enterCoverPhoto = '';
   enterDescription = '';
   mode: 'create' | 'edit' = 'create';
 
@@ -43,6 +44,7 @@ export class BookCreate {
               this.post = loadedPost;
               this.enterTitle = this.post.title;
               this.enterAuthor = this.post.author;
+              this.enterCoverPhoto = this.post.coverPhoto || '';
               this.enterDescription = this.post.description;
             }
           });
@@ -50,6 +52,7 @@ export class BookCreate {
           this.post = foundPost;
           this.enterTitle = this.post.title;
           this.enterAuthor = this.post.author;
+          this.enterCoverPhoto = this.post.coverPhoto || '';
           this.enterDescription = this.post.description;
         }
       } else {
@@ -65,12 +68,12 @@ export class BookCreate {
     }
 
     if (this.mode === 'create') {
-      this.bookService.addBook(form.value.title, form.value.author, form.value.description)
+      this.bookService.addBook(form.value.title, form.value.author, form.value.coverPhoto, form.value.description)
         .subscribe(() => {
           this.router.navigate(['/']);
         });
     } else {
-      this.bookService.updateBook(this.postId!, form.value.title, form.value.author, form.value.description)
+      this.bookService.updateBook(this.postId!, form.value.title, form.value.author, form.value.coverPhoto, form.value.description)
         .subscribe(() => {
           this.router.navigate(['/']);
         });

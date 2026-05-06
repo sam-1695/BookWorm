@@ -51,7 +51,9 @@
                 <div class="list-card" *ngFor="let list of lists">
                     <h3 class="list-name">{{ list.name }}</h3>
                     <div class="book-grid">
-                        <div class="book-square" *ngFor="let book of list.books | slice:0:4"></div>
+                        <div class="book-square" *ngFor="let book of list.books | slice:0:4" 
+                             [style.backgroundImage]="book.coverPhoto ? 'url(' + book.coverPhoto + ')' : 'none'"
+                             style="background-size: cover; background-position: center;"></div>
                         <!-- Fill empty squares if less than 4 books to maintain the sketch look -->
                         <div class="book-square empty" *ngFor="let i of [1,2,3,4] | slice:0:(4 - list.books.length)"></div>
                     </div>
@@ -67,7 +69,8 @@
             <h2 class="section-title">recent reads</h2>
             <div class="horizontal-scroll">
                 <div class="recent-read-item" *ngFor="let read of mockRecentReads">
-                    <div class="book-spine"></div>
+                    <img *ngIf="read.coverUrl" [src]="read.coverUrl" class="book-spine-img" style="width: 30px; height: 40px; object-fit: cover; border-radius: 2px;">
+                    <div *ngIf="!read.coverUrl" class="book-spine"></div>
                     <span class="read-title">{{ read.title }}</span>
                 </div>
             </div>

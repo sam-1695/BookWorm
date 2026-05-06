@@ -4,7 +4,10 @@
             <mat-panel-title>{{ book.title }}</mat-panel-title>
             <mat-panel-description>{{ book.author }}</mat-panel-description>
         </mat-expansion-panel-header>
-        <p>{{ book.description }}</p>
+        <div class="book-content" style="display: flex; gap: 1rem; align-items: flex-start;">
+            <img *ngIf="book.coverPhoto" [src]="book.coverPhoto" [alt]="book.title" style="max-width: 150px; border-radius: 4px;">
+            <p>{{ book.description }}</p>
+        </div>
         <mat-action-row>
             <a mat-button [routerLink]="['/edit', book.id]">EDIT</a>
             <button mat-button color="warn" (click)="onDelete(book.id)">DELETE</button>

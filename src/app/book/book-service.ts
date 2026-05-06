@@ -34,6 +34,7 @@ export class BookService {
             id: book._id,
             title: book.title,
             author: book.author,
+            coverPhoto: book.coverPhoto,
             description: book.description
           };
         });
@@ -55,8 +56,8 @@ export class BookService {
     return this.books.find(book => book.id === id);
   }
 
-  addBook(title: string, author: string, description: string) {
-    const book: Book = { id: null, title: title, author: author, description: description };
+  addBook(title: string, author: string, coverPhoto: string, description: string) {
+    const book: Book = { id: null, title: title, author: author, coverPhoto: coverPhoto, description: description };
     return this.http.post<any>(
       'http://localhost:3000/api/books',
       book
@@ -68,8 +69,8 @@ export class BookService {
   }
 
   // copilot did it 
-  updateBook(id: string, title: string, author: string, description: string) {
-    const updatedBook: Book = { id: id, title: title, author: author, description: description };
+  updateBook(id: string, title: string, author: string, coverPhoto: string, description: string) {
+    const updatedBook: Book = { id: id, title: title, author: author, coverPhoto: coverPhoto, description: description };
     return this.http.put(`http://localhost:3000/api/books/${id}`, updatedBook)
       .pipe(map(() => {
         const index = this.books.findIndex(book => book.id === id);
