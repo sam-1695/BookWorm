@@ -13,12 +13,14 @@ export class ListService {
   constructor(private http: HttpClient) {}
 
   fetchLists(): void {
-    this.http.get<BookList[]>('http://localhost:3000/api/lists').subscribe({
+    this.http.get<any>('http://localhost:3000/api/lists').subscribe({
       next: (data) => {
-        this.lists.next(data);
+        // Handle both direct array and wrapped array ({lists: []})
+        const listsArray = Array.isArray(data) ? data : (data.lists || []);
+        this.lists.next(listsArray);
       },
       error: (err) => {
-        console.error('Error fetching lists', err);
+        console.error('ListService: Error fetching lists', err);
       }
     });
   }
