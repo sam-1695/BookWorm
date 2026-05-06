@@ -1,1 +1,76 @@
-<p>library works!</p>
+<div class="page-layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-icon">
+            <mat-icon>account_circle</mat-icon>
+        </div>
+        <div class="sidebar-icon active">
+            <mat-icon>menu_book</mat-icon>
+        </div>
+        <div class="sidebar-icon">
+            <mat-icon>group</mat-icon>
+        </div>
+        <div class="sidebar-icon">
+            <mat-icon>search</mat-icon>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="content">
+        <!-- Header: Profile & Friends -->
+        <header class="content-header">
+            <div class="profile-section">
+                <div class="profile-avatar">
+                    <mat-icon>person</mat-icon>
+                </div>
+                <div class="profile-info">
+                    <h2 class="username">firstname</h2>
+                    <p class="bio">bio! i love reading<br>yay yay books</p>
+                </div>
+            </div>
+
+            <div class="friends-section">
+                <h3 class="section-label">friends</h3>
+                <div class="friends-list">
+                    <div class="friend-avatar" *ngFor="let friend of mockFriends">
+                        <img [src]="friend.avatar" [alt]="friend.username">
+                    </div>
+                    <div class="friend-avatar more">
+                        <mat-icon>arrow_forward</mat-icon>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <hr class="divider">
+
+        <!-- My Library Section -->
+        <section class="library-section">
+            <h2 class="section-title">my library</h2>
+            <div class="horizontal-scroll" *ngIf="(lists$ | async) as lists">
+                <div class="list-card" *ngFor="let list of lists">
+                    <h3 class="list-name">{{ list.name }}</h3>
+                    <div class="book-grid">
+                        <div class="book-square" *ngFor="let book of list.books | slice:0:4"></div>
+                        <!-- Fill empty squares if less than 4 books to maintain the sketch look -->
+                        <div class="book-square empty" *ngFor="let i of [1,2,3,4] | slice:0:(4 - list.books.length)"></div>
+                    </div>
+                </div>
+                <p *ngIf="lists.length === 0" class="empty-msg">No lists found in the library.</p>
+            </div>
+        </section>
+
+        <hr class="divider">
+
+        <!-- Recent Reads Section -->
+        <section class="recent-reads-section">
+            <h2 class="section-title">recent reads</h2>
+            <div class="horizontal-scroll">
+                <div class="recent-read-item" *ngFor="let read of mockRecentReads">
+                    <div class="book-spine"></div>
+                    <span class="read-title">{{ read.title }}</span>
+                </div>
+            </div>
+        </section>
+    </main>
+</div>

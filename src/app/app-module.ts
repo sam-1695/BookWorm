@@ -27,6 +27,7 @@
 
 // export class AppModule {}
 import { NgModule, provideBrowserGlobalErrorListeners } from '@angular/core';
+import { provideHttpClient } from '@angular/common/http';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router'; // 👈 Change RouterOutlet to RouterModule
 
@@ -44,6 +45,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatIconModule } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
 import { Profile } from './pages/profile/profile';
 import { Friends } from './pages/friends/friends';
@@ -74,9 +76,10 @@ import { Navbar } from './components/navbar/navbar';
     MatFormFieldModule,
     MatInputModule,
     MatToolbarModule,
+    MatIconModule,
     FormsModule,
   ],
-  providers: [provideBrowserGlobalErrorListeners()],
+  providers: [provideBrowserGlobalErrorListeners(), provideHttpClient()],
   bootstrap: [App],
 })
 export class AppModule {}
