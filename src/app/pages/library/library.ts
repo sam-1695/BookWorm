@@ -19,10 +19,10 @@ export class Library implements OnInit {
     { username: 'Eve', avatar: 'https://i.pravatar.cc/150?u=eve' },
   ];
   mockRecentReads = [
-    { title: 'The Giver', author: 'Lois Lowry' },
-    { title: 'Book Thief', author: 'Markus Zusak' },
-    { title: '1984', author: 'George Orwell' },
-    { title: 'The Hobbit', author: 'J.R.R. Tolkien' },
+    { title: 'The Giver', author: 'Lois Lowry', coverUrl: 'https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1342493368i/3636.jpg' },
+    { title: 'Book Thief', author: 'Markus Zusak', coverUrl: 'https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1522157426i/18031.jpg' },
+    { title: '1984', author: 'George Orwell', coverUrl: 'https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1532714506i/40961427.jpg' },
+    { title: 'The Hobbit', author: 'J.R.R. Tolkien', coverUrl: 'https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1546071216i/5907.jpg' },
   ];
 
   constructor(private listService: ListService) {
