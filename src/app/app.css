@@ -1,0 +1,44 @@
+.app-layout {
+  display: flex;
+  min-height: calc(100vh - 64px);
+  background-color: #fffaf3;
+}
+
+.sidebar {
+  width: 70px;
+  border-right: 2px solid #4b2e1f;
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 24px;
+  gap: 24px;
+}
+
+.sidebar-icon {
+  width: 44px;
+  height: 44px;
+  color: #4b2e1f;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+}
+
+.sidebar-icon mat-icon {
+  font-size: 30px;
+  width: 30px;
+  height: 30px;
+}
+
+.sidebar-icon:hover,
+.sidebar-icon.active {
+  background-color: #ead8c0;
+}
+
+.page-content {
+  flex: 1;
+  padding: 24px 40px;
+  overflow-y: auto;
+}

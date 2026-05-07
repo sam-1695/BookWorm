@@ -25,7 +25,6 @@ import { Profile } from './pages/profile/profile';
 import { Friends } from './pages/friends/friends';
 import { Library } from './pages/library/library';
 import { Explore } from './pages/explore/explore';
-import { Navbar } from './components/navbar/navbar';
 import { Login } from './pages/login/login';
 
 @NgModule({
@@ -41,7 +40,6 @@ import { Login } from './pages/login/login';
     Friends,
     Library,
     Explore,
-    Navbar,
   ],
   imports: [
     BrowserModule,

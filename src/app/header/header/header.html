@@ -1,9 +1,13 @@
-<mat-toolbar> Assignment 3 - Angular Chat Room 
-    <span>
-        <div>
-            <a routerLink="/" mat-button> My App</a>
-            <a routerLink="/create" mat-button> Posts </a>
-            <a routerLink="/library" mat-button> Library </a>
-        </div>
-    </span>
+<mat-toolbar class="header">
+  <a routerLink="/explore" class="brand">
+    Book Worm
+  </a>
+
+  <span class="spacer"></span>
+
+  <a routerLink="/explore" mat-button>Explore</a>
+  <a routerLink="/library" mat-button>Library</a>
+  <a routerLink="/friends" mat-button>Friends</a>
+  <a routerLink="/profile" mat-button>Profile</a>
+  <a routerLink="/login" mat-raised-button color="primary">Login</a>
 </mat-toolbar>

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { ListService } from './list-service';
+import { ListService } from '../profile/list-service';
 import { Observable } from 'rxjs';
-import { BookList } from './list-interface';
+import { BookList } from '../profile/list-interface';
 
 @Component({
   selector: 'app-library',

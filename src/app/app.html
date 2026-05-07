@@ -1,4 +1,25 @@
-<main>
-  <app-header> </app-header>
-  <router-outlet></router-outlet>
-</main>
+<app-header></app-header>
+
+<div class="app-layout">
+  <aside class="sidebar">
+    <a routerLink="/profile" routerLinkActive="active" class="sidebar-icon" title="Profile">
+      <mat-icon>account_circle</mat-icon>
+    </a>
+
+    <a routerLink="/library" routerLinkActive="active" class="sidebar-icon" title="Library">
+      <mat-icon>menu_book</mat-icon>
+    </a>
+
+    <a routerLink="/friends" routerLinkActive="active" class="sidebar-icon" title="Friends">
+      <mat-icon>group</mat-icon>
+    </a>
+
+    <a routerLink="/explore" routerLinkActive="active" class="sidebar-icon" title="Explore">
+      <mat-icon>search</mat-icon>
+    </a>
+  </aside>
+
+  <main class="page-content">
+    <router-outlet></router-outlet>
+  </main>
+</div>
