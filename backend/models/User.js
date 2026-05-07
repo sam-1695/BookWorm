@@ -17,6 +17,16 @@ const userSchema = new mongoose.Schema({
     required: true,
   },
 
+  bio: {
+    type: String,
+    default: "",
+  },
+
+  profilePicture: {
+    type: String,
+    default: "",
+  },
+
   // Friends system
   friends: [
     {

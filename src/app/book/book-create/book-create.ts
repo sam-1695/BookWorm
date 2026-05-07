@@ -70,12 +70,12 @@ export class BookCreate {
     if (this.mode === 'create') {
       this.bookService.addBook(form.value.title, form.value.author, form.value.coverPhoto, form.value.description)
         .subscribe(() => {
-          this.router.navigate(['/']);
+          this.router.navigate(['/library']);
         });
     } else {
       this.bookService.updateBook(this.postId!, form.value.title, form.value.author, form.value.coverPhoto, form.value.description)
         .subscribe(() => {
-          this.router.navigate(['/']);
+          this.router.navigate(['/library']);
         });
     }
     form.resetForm();

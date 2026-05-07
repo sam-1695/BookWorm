@@ -1,7 +1,7 @@
 <app-header></app-header>
 
 <div class="app-layout">
-  <aside class="sidebar">
+  <aside class="sidebar" *ngIf="currentUser$ | async">
     <a routerLink="/profile" routerLinkActive="active" class="sidebar-icon" title="Profile">
       <mat-icon>account_circle</mat-icon>
     </a>

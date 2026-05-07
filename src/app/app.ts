@@ -1,5 +1,6 @@
 import { Component, signal } from '@angular/core';
-// import { RouterOutlet } from '@angular/router';
+import { Observable } from 'rxjs';
+import { AuthService, CurrentUser } from './services/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -9,4 +10,9 @@ import { Component, signal } from '@angular/core';
 })
 export class App {
   protected readonly title = signal('BookWorm');
+  currentUser$: Observable<CurrentUser | null>;
+
+  constructor(private authService: AuthService) {
+    this.currentUser$ = this.authService.currentUser$;
+  }
 }

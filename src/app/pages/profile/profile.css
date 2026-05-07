@@ -169,3 +169,70 @@
     color: #999;
     font-style: italic;
 }
+
+.profile-avatar {
+  cursor: pointer;
+  overflow: hidden;
+  background-color: #fff;
+}
+
+.profile-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.empty-bio {
+  color: #999;
+  font-style: italic;
+}
+
+.small-btn {
+  margin-top: 8px;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 8px;
+  background-color: #6f4e37;
+  color: white;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.small-btn:hover {
+  background-color: #543927;
+}
+
+.small-btn.secondary {
+  background-color: #999;
+}
+
+.bio-editor textarea {
+  width: 280px;
+  max-width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-family: inherit;
+  resize: vertical;
+}
+
+.bio-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.save-message {
+  margin-top: 6px;
+  color: #6f4e37;
+  font-size: 14px;
+}
+
+.friend-avatar.more {
+  color: #333;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.friend-avatar.more:hover {
+  background-color: #f0e7dc;
+}

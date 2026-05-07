@@ -1,0 +1,305 @@
+.library-page {
+  padding: 32px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.library-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.library-header h1 {
+  margin: 0;
+  font-size: 36px;
+  color: #3b2a20;
+}
+
+.library-header p {
+  margin-top: 8px;
+  color: #6b5b50;
+}
+
+.header-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.icon-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: none;
+  border-radius: 999px;
+  padding: 10px 16px;
+  background-color: #6f4e37;
+  color: white;
+  cursor: pointer;
+  text-decoration: none;
+  font-size: 14px;
+  font-family: inherit;
+}
+
+.icon-button:hover {
+  background-color: #543927;
+}
+
+.add-book-link {
+  background-color: #a07652;
+}
+
+.add-book-link:hover {
+  background-color: #7d5a3c;
+}
+
+.success-message {
+  background-color: #edf7ed;
+  color: #2e7d32;
+  padding: 10px 14px;
+  border-radius: 10px;
+  margin-bottom: 16px;
+}
+
+.error-message {
+  background-color: #fdecea;
+  color: #b3261e;
+  padding: 10px 14px;
+  border-radius: 10px;
+  margin-bottom: 16px;
+}
+
+.create-list-card {
+  background-color: #fffaf5;
+  border: 1px solid #ead9c8;
+  border-radius: 18px;
+  padding: 24px;
+  margin-bottom: 28px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+}
+
+.create-list-card h2 {
+  margin-top: 0;
+  color: #3b2a20;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 18px;
+}
+
+.form-group label {
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #3b2a20;
+}
+
+.form-group input,
+.form-group select {
+  padding: 10px;
+  border: 1px solid #ccb8a3;
+  border-radius: 10px;
+  font-family: inherit;
+  font-size: 15px;
+}
+
+.form-group select[multiple] {
+  min-height: 150px;
+}
+
+.form-group small {
+  margin-top: 6px;
+  color: #7a6a5f;
+}
+
+.form-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.primary-button,
+.secondary-button {
+  border: none;
+  border-radius: 10px;
+  padding: 10px 16px;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.primary-button {
+  background-color: #6f4e37;
+  color: white;
+}
+
+.secondary-button {
+  background-color: #ddd0c3;
+  color: #3b2a20;
+}
+
+.lists-section {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.book-list-card {
+  background-color: #ffffff;
+  border: 1px solid #ead9c8;
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: 0 4px 16px rgba(59, 42, 32, 0.08);
+}
+
+.list-title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.list-title-row h2 {
+  margin: 0;
+  font-size: 26px;
+  color: #3b2a20;
+}
+
+.list-title-row p {
+  margin: 4px 0 0;
+  color: #7a6a5f;
+}
+
+.delete-list-button {
+  border: none;
+  background-color: #f5e9dd;
+  color: #7d3c2f;
+  border-radius: 50%;
+  width: 42px;
+  height: 42px;
+  cursor: pointer;
+}
+
+.delete-list-button:hover {
+  background-color: #ead0c0;
+}
+
+.add-to-list-row {
+  display: flex;
+  gap: 10px;
+  margin-top: 18px;
+  margin-bottom: 20px;
+}
+
+.add-to-list-row select {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #ccb8a3;
+  border-radius: 10px;
+  font-family: inherit;
+}
+
+.add-to-list-row button {
+  border: none;
+  border-radius: 10px;
+  padding: 10px 14px;
+  background-color: #6f4e37;
+  color: white;
+  cursor: pointer;
+}
+
+.book-cover-row {
+  display: flex;
+  gap: 18px;
+  overflow-x: auto;
+  padding-bottom: 8px;
+}
+
+.book-cover-card {
+  position: relative;
+  min-width: 130px;
+  max-width: 130px;
+}
+
+.book-cover-card img,
+.missing-cover {
+  width: 130px;
+  height: 190px;
+  border-radius: 12px;
+  object-fit: cover;
+  background-color: #f1e7dc;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.16);
+}
+
+.missing-cover {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6f4e37;
+}
+
+.book-cover-card h3 {
+  margin: 10px 0 2px;
+  font-size: 14px;
+  color: #3b2a20;
+}
+
+.book-cover-card p {
+  margin: 0;
+  font-size: 13px;
+  color: #7a6a5f;
+}
+
+.remove-book-button {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  width: 26px;
+  height: 26px;
+  border: none;
+  border-radius: 50%;
+  background-color: #6f4e37;
+  color: white;
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 1;
+}
+
+.remove-book-button:hover {
+  background-color: #3b2a20;
+}
+
+.no-books-message {
+  margin-top: 18px;
+  padding: 16px;
+  background-color: #fffaf5;
+  border-radius: 12px;
+  color: #7a6a5f;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 48px;
+  border: 2px dashed #d8c0aa;
+  border-radius: 20px;
+  color: #7a6a5f;
+}
+
+.empty-state mat-icon {
+  font-size: 42px;
+  width: 42px;
+  height: 42px;
+  color: #6f4e37;
+}
+
+@media (max-width: 700px) {
+  .library-header {
+    flex-direction: column;
+  }
+
+  .add-to-list-row {
+    flex-direction: column;
+  }
+}
