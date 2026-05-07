@@ -19,7 +19,7 @@ const getListsByUser = async (req, res) => {
   try {
     const userId = req.params.userId;
 
-    // Make sure every user has a default Favorites list
+    // Make sure this user has exactly one default Favorites list
     let favoritesList = await List.findOne({
       userId,
       name: { $regex: /^favorites$/i },
@@ -54,9 +54,22 @@ const createList = async (req, res) => {
       });
     }
 
+    const cleanName = name.trim();
+
+    if (cleanName.toLowerCase() === "favorites") {
+      const existingFavorites = await List.findOne({
+        userId,
+        name: { $regex: /^favorites$/i },
+      }).populate("books");
+
+      if (existingFavorites) {
+        return res.status(200).json(existingFavorites);
+      }
+    }
+
     const list = await List.create({
       userId,
-      name,
+      name: cleanName,
       books: books || [],
     });
 

@@ -1,4 +1,4 @@
-//this is where we setup middleware, CORS, and our routes
+// this is where we setup middleware, CORS, and our routes
 
 const express = require("express");
 const cors = require("cors");
@@ -10,16 +10,19 @@ const listRoutes = require("./routes/listRoutes");
 
 const app = express();
 
-//middleware
+// middleware
 app.use(cors());
-app.use(express.json());
 
-//test route
+// Needed for base64 profile image uploads
+app.use(express.json({ limit: "10mb" }));
+app.use(express.urlencoded({ extended: true, limit: "10mb" }));
+
+// test route
 app.get("/", (req, res) => {
   res.send("Book Worm API is running");
 });
 
-//express REST API routes
+// express REST API routes
 app.use("/api/books", bookRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/reviews", reviewRoutes);

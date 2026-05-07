@@ -14,6 +14,10 @@ export class ListService {
 
   constructor(private http: HttpClient) {}
 
+  clearLists(): void {
+    this.lists.next([]);
+  }
+
   fetchLists(): void {
     this.http.get<BookList[]>(this.apiUrl).subscribe({
       next: (data) => {
@@ -28,7 +32,6 @@ export class ListService {
   fetchListsByUser(userId: string): void {
     this.http.get<BookList[]>(`${this.apiUrl}/user/${userId}`).subscribe({
       next: (data) => {
-        console.log('Lists loaded for user:', data);
         this.lists.next(data);
       },
       error: (err) => {

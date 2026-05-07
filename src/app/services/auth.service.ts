@@ -8,8 +8,9 @@ export interface CurrentUser {
   email: string;
   bio?: string;
   profilePicture?: string;
-  friends?: string[];
-  friendRequests?: string[];
+  friends?: any[];
+  friendRequests?: any[];
+  recentReads?: any[];
 }
 
 interface LoginResponse {
@@ -73,4 +74,18 @@ export class AuthService {
     const user = localStorage.getItem('currentUser');
     return user ? JSON.parse(user) : null;
   }
+
+  refreshCurrentUser(): Observable<CurrentUser> {
+  const currentUser = this.getCurrentUser();
+
+  if (!currentUser) {
+    throw new Error('No current user found');
+  }
+
+  return this.http.get<CurrentUser>(`${this.apiUrl}/${currentUser._id}`).pipe(
+    tap((updatedUser) => {
+      this.saveUser(updatedUser);
+    })
+  );
+}
 }

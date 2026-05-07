@@ -3,7 +3,10 @@ import { ListService } from './list-service';
 import { Observable } from 'rxjs';
 import { BookList } from './list-interface';
 import { AuthService, CurrentUser } from '../../services/auth.service';
+import { UserService } from '../../services/user.service';
 import { Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
+import { Book } from '../../book/book-interface';
 
 @Component({
   selector: 'app-profile',
@@ -19,25 +22,17 @@ export class Profile implements OnInit {
   isEditingBio: boolean = false;
   saveMessage: string = '';
 
-  mockFriends = [
-    { username: 'Alice', avatar: 'https://i.pravatar.cc/150?u=alice' },
-    { username: 'Bob', avatar: 'https://i.pravatar.cc/150?u=bob' },
-    { username: 'Charlie', avatar: 'https://i.pravatar.cc/150?u=charlie' },
-    { username: 'David', avatar: 'https://i.pravatar.cc/150?u=david' },
-    { username: 'Eve', avatar: 'https://i.pravatar.cc/150?u=eve' },
-  ];
+  availableBooks: Book[] = [];
+  selectedRecentReadBookId: string = '';
 
-  mockRecentReads = [
-    { title: 'The Giver', author: 'Lois Lowry', coverUrl: 'https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1342493368i/3636.jpg' },
-    { title: 'Book Thief', author: 'Markus Zusak', coverUrl: 'https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1522157426i/18031.jpg' },
-    { title: '1984', author: 'George Orwell', coverUrl: 'https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1532714506i/40961427.jpg' },
-    { title: 'The Hobbit', author: 'J.R.R. Tolkien', coverUrl: 'https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1546071216i/5907.jpg' },
-  ];
+  private booksApiUrl = 'http://localhost:3000/api/books';
 
   constructor(
     private listService: ListService,
     private authService: AuthService,
-    private router: Router
+    private userService: UserService,
+    private router: Router,
+    private http: HttpClient
   ) {
     this.lists$ = this.listService.lists$;
   }
@@ -51,7 +46,49 @@ export class Profile implements OnInit {
     }
 
     this.bioText = this.currentUser.bio || '';
-    this.listService.fetchLists();
+
+    // Prevent previous user's lists from flashing/showing
+    this.listService.clearLists();
+
+    // IMPORTANT: only fetch lists for the logged-in user
+    this.listService.fetchListsByUser(this.currentUser._id);
+
+    this.loadBooks();
+    this.refreshCurrentUser();
+  }
+
+  refreshCurrentUser(): void {
+    if (!this.currentUser) {
+      return;
+    }
+
+    this.authService.refreshCurrentUser().subscribe({
+      next: (updatedUser) => {
+        this.currentUser = updatedUser;
+        this.bioText = updatedUser.bio || '';
+      },
+      error: (err) => {
+        console.error('Error refreshing current user:', err);
+      }
+    });
+  }
+
+  loadBooks(): void {
+    this.http.get<any[]>(this.booksApiUrl).subscribe({
+      next: (booksFromApi) => {
+        this.availableBooks = booksFromApi.map((book) => ({
+          _id: book._id,
+          id: book._id,
+          title: book.title,
+          author: book.author,
+          coverPhoto: book.coverPhoto,
+          description: book.description
+        }));
+      },
+      error: (err) => {
+        console.error('Error loading books:', err);
+      }
+    });
   }
 
   startEditingBio(): void {
@@ -117,5 +154,53 @@ export class Profile implements OnInit {
     };
 
     reader.readAsDataURL(file);
+  }
+
+  addRecentRead(): void {
+    if (!this.currentUser || !this.selectedRecentReadBookId) {
+      return;
+    }
+
+    this.userService.addRecentRead(
+      this.currentUser._id,
+      this.selectedRecentReadBookId
+    ).subscribe({
+      next: (updatedUser) => {
+        this.currentUser = updatedUser;
+        this.authService.saveUser(updatedUser);
+        this.selectedRecentReadBookId = '';
+        this.saveMessage = 'Recent read added!';
+      },
+      error: (err) => {
+        console.error('Error adding recent read:', err);
+        this.saveMessage = 'Could not add recent read.';
+      }
+    });
+  }
+
+  removeRecentRead(bookId: string): void {
+    if (!this.currentUser || !bookId) {
+      return;
+    }
+
+    this.userService.removeRecentRead(this.currentUser._id, bookId).subscribe({
+      next: (updatedUser) => {
+        this.currentUser = updatedUser;
+        this.authService.saveUser(updatedUser);
+        this.saveMessage = 'Recent read removed.';
+      },
+      error: (err) => {
+        console.error('Error removing recent read:', err);
+        this.saveMessage = 'Could not remove recent read.';
+      }
+    });
+  }
+
+  getBookId(book: any): string {
+    return book._id || book.id || '';
+  }
+
+  getRecentReads(): any[] {
+    return this.currentUser?.recentReads || [];
   }
 }

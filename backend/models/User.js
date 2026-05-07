@@ -42,6 +42,14 @@ const userSchema = new mongoose.Schema({
       ref: "User",
     },
   ],
+
+   // Starts blank for new accounts
+  recentReads: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Book",
+    },
+  ],
 }, { timestamps: true });
 
 module.exports = mongoose.model("User", userSchema);

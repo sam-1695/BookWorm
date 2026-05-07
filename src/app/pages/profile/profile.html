@@ -107,20 +107,51 @@
   <hr class="divider">
 
   <section class="recent-reads-section">
-    <h2 class="section-title">recent reads</h2>
+  <h2 class="section-title">recent reads</h2>
 
-    <div class="horizontal-scroll">
-      <div class="recent-read-item" *ngFor="let read of mockRecentReads">
-        <img
-          *ngIf="read.coverUrl"
-          [src]="read.coverUrl"
-          class="book-spine-img"
-          style="width: 30px; height: 40px; object-fit: cover; border-radius: 2px;">
+  <div class="add-recent-read-row">
+    <select [(ngModel)]="selectedRecentReadBookId">
+      <option value="">Choose a book to add</option>
 
-        <div *ngIf="!read.coverUrl" class="book-spine"></div>
+      <option
+        *ngFor="let book of availableBooks"
+        [value]="getBookId(book)"
+      >
+        {{ book.title }} by {{ book.author }}
+      </option>
+    </select>
 
-        <span class="read-title">{{ read.title }}</span>
-      </div>
+    <button type="button" class="small-btn" (click)="addRecentRead()">
+      Add Recent Read
+    </button>
+  </div>
+
+  <div class="horizontal-scroll" *ngIf="getRecentReads().length > 0; else noRecentReads">
+    <div class="recent-read-item" *ngFor="let read of getRecentReads()">
+      <button
+        type="button"
+        class="remove-recent-read"
+        (click)="removeRecentRead(read._id)"
+        title="Remove recent read"
+      >
+        ×
+      </button>
+
+      <img
+        *ngIf="read.coverPhoto"
+        [src]="read.coverPhoto"
+        class="book-spine-img"
+        style="width: 30px; height: 40px; object-fit: cover; border-radius: 2px;"
+      >
+
+      <div *ngIf="!read.coverPhoto" class="book-spine"></div>
+
+      <span class="read-title">{{ read.title }}</span>
     </div>
-  </section>
+  </div>
+
+  <ng-template #noRecentReads>
+    <p class="empty-msg">No recent reads yet.</p>
+  </ng-template>
+</section>
 </div>
