@@ -6,6 +6,7 @@ import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-login',
+  standalone: true,
   imports: [FormsModule, CommonModule],
   templateUrl: './login.html',
   styleUrl: './login.css'
@@ -25,13 +26,21 @@ export class Login {
   onLogin(): void {
     this.errorMessage = '';
 
-    this.authService.login(this.email, this.password).subscribe({
-      next: (response) => {
-        this.authService.saveUser(response.user);
+    const email = this.email.trim().toLowerCase();
+    const password = this.password.trim();
+
+    if (!email || !password) {
+      this.errorMessage = 'Please enter both email and password.';
+      return;
+    }
+
+    this.authService.login(email, password).subscribe({
+      next: () => {
         this.router.navigate(['/profile']);
       },
       error: (err) => {
-        this.errorMessage = err.error?.message || 'Login failed. Please try again.';
+        console.error('Login error:', err);
+        this.errorMessage = err.error?.message || 'Login failed. Please check your email and password.';
       }
     });
   }

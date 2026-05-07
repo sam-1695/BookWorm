@@ -51,6 +51,8 @@ const createUser = async (req, res) => {
       _id: newUser._id,
       username: newUser.username,
       email: newUser.email,
+      bio: newUser.bio,
+      profilePicture: newUser.profilePicture,
       friends: newUser.friends,
       friendRequests: newUser.friendRequests,
     };
@@ -201,43 +203,73 @@ const removeFriend = async (req, res) => {
   }
 };
 
-//LOGIN a user
+// LOGIN a user
 const loginUser = async (req, res) => {
   try {
-    const {email, password} = req.body;
+    const email = req.body.email?.trim().toLowerCase();
+    const password = req.body.password?.trim();
 
-    //check that the email and passwords were sent from angular
+    console.log("Login request received:");
+    console.log("Email typed:", email);
+    console.log("Password typed:", password);
+
     if (!email || !password) {
-      return res.status(400).json({message: "Email and password are required!"});
+      return res.status(400).json({
+        message: "Email and password are required!"
+      });
     }
 
-    //find a user by email
-    const user = await User.findOne({email: email.toLowerCase()});
+    // Debug: show what users this backend can actually see
+    const allUsers = await User.find({}, "username email password");
+    console.log("Users found in this database:");
+    console.log(allUsers);
+
+    const user = await User.findOne({ email });
 
     if (!user) {
-      return res.status(401).json({message: "invalid email or password"});
+      console.log("No user found with email:", email);
+
+      return res.status(401).json({
+        message: "Invalid email or password"
+      });
     }
 
-    //compare password - password stored as plain text
+    console.log("Matched user:", user.email);
+    console.log("Stored password:", user.password);
+    console.log("Typed password:", password);
+
     if (user.password !== password) {
-      return res.status(401).json({message: "Invalid email or password"});
+      console.log("Password does not match");
+
+      return res.status(401).json({
+        message: "Invalid email or password"
+      });
     }
 
-    //do not send password back to angular
     const userToReturn = {
       _id: user._id,
       username: user.username,
       email: user.email,
-      friends: user.friends,
-      friendRequests: user.friendRequests,
+      bio: user.bio || "",
+      profilePicture: user.profilePicture || "",
+      friends: user.friends || [],
+      friendRequests: user.friendRequests || [],
     };
+
+    console.log("Login successful for:", user.email);
 
     res.status(200).json({
       message: "Login successful",
       user: userToReturn,
     });
+
   } catch (err) {
-    res.status(500).json({message: "Error logging in", error: err.message});
+    console.error("Error logging in:", err);
+
+    res.status(500).json({
+      message: "Error logging in",
+      error: err.message
+    });
   }
 };
 

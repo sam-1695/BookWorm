@@ -1,6 +1,3 @@
-//where we handle the operations for the list model
-//controls the data flow from the database to the frontend
-
 const List = require("../models/List");
 
 // GET all lists
@@ -20,9 +17,25 @@ const getLists = async (req, res) => {
 // GET lists for one user
 const getListsByUser = async (req, res) => {
   try {
-    const lists = await List.find({ userId: req.params.userId })
+    const userId = req.params.userId;
+
+    // Make sure every user has a default Favorites list
+    let favoritesList = await List.findOne({
+      userId,
+      name: { $regex: /^favorites$/i },
+    });
+
+    if (!favoritesList) {
+      favoritesList = await List.create({
+        userId,
+        name: "Favorites",
+        books: [],
+      });
+    }
+
+    const lists = await List.find({ userId })
       .populate("books")
-      .sort({ createdAt: -1 });
+      .sort({ createdAt: 1 });
 
     res.status(200).json(lists);
   } catch (err) {
@@ -35,11 +48,19 @@ const createList = async (req, res) => {
   try {
     const { userId, name, books } = req.body;
 
+    if (!userId || !name) {
+      return res.status(400).json({
+        message: "User and list name are required",
+      });
+    }
+
     const list = await List.create({
       userId,
       name,
       books: books || [],
     });
+
+    await list.populate("books");
 
     res.status(201).json(list);
   } catch (err) {
@@ -85,6 +106,12 @@ const deleteList = async (req, res) => {
 const addBookToList = async (req, res) => {
   try {
     const { bookId } = req.body;
+
+    if (!bookId) {
+      return res.status(400).json({
+        message: "Book ID is required",
+      });
+    }
 
     const list = await List.findByIdAndUpdate(
       req.params.id,
