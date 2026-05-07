@@ -274,6 +274,8 @@ const acceptFriendRequest = async (req, res) => {
 };
 
 // DECLINE friend request
+// req.params.id = user declining the request
+// req.body.senderId = user who sent the request
 const declineFriendRequest = async (req, res) => {
   try {
     const receiverId = req.params.id;
@@ -285,6 +287,7 @@ const declineFriendRequest = async (req, res) => {
     }
 
     receiver.friendRequests = receiver.friendRequests.filter(
+      (id) => id.toString() !== senderId
     );
 
     await receiver.save();

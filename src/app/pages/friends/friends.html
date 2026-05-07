@@ -57,6 +57,11 @@
             <p class="email">{{ friend.email }}</p>
           </div>
         </div>
+        <div class="action-buttons">
+          <button mat-icon-button color="warn" (click)="removeFriend(friend._id || friend)" title="Remove friend">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
       </div>
     </mat-card-content>
   </mat-card>
