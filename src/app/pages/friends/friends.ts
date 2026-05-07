@@ -143,11 +143,6 @@ export class Friends implements OnInit {
   }
 
   declineRequest(senderId: string): void {
-    // "Declining" = just remove the request from the receiver's friendRequests array.
-    // The backend's removeFriend endpoint removes from the friends list, not requests,
-    // so we need to handle this with a plain updateUser call or a dedicated route.
-    // For now we optimistically remove it locally and refresh.
-    // If you add a dedicated decline route later, swap in the HTTP call here.
     this.userService.declineFriendRequest(this.currentUser._id, senderId).subscribe({
       next: () => {
         this.showMessage('Request declined.');
@@ -158,6 +153,9 @@ export class Friends implements OnInit {
   }
 
   removeFriend(friendId: string): void {
+    const confirmed = window.confirm('Are you sure you want to remove this friend?');
+    if (!confirmed) return;
+
     this.userService.removeFriend(this.currentUser._id, friendId).subscribe({
       next: () => {
         this.showMessage('Friend removed.');
