@@ -201,10 +201,51 @@ const removeFriend = async (req, res) => {
   }
 };
 
+//LOGIN a user
+const loginUser = async (req, res) => {
+  try {
+    const {email, password} = req.body;
+
+    //check that the email and passwords were sent from angular
+    if (!email || !password) {
+      return res.status(400).json({message: "Email and password are required!"});
+    }
+
+    //find a user by email
+    const user = await User.findOne({email: email.toLowerCase()});
+
+    if (!user) {
+      return res.status(401).json({message: "invalid email or password"});
+    }
+
+    //compare password - password stored as plain text
+    if (user.password !== password) {
+      return res.status(401).json({message: "Invalid email or password"});
+    }
+
+    //do not send password back to angular
+    const userToReturn = {
+      _id: user._id,
+      username: user.username,
+      email: user.email,
+      friends: user.friends,
+      friendRequests: user.friendRequests,
+    };
+
+    res.status(200).json({
+      message: "Login successful",
+      user: userToReturn,
+    });
+  } catch (err) {
+    res.status(500).json({message: "Error logging in", error: err.message});
+  }
+};
+
 module.exports = {
   getUsers,
   getUserById,
   createUser,
+  loginUser,
   updateUser,
   deleteUser,
   sendFriendRequest,

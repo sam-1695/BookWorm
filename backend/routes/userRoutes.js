@@ -7,6 +7,7 @@ const {
   getUsers,
   getUserById,
   createUser,
+  loginUser,
   updateUser,
   deleteUser,
   sendFriendRequest,
@@ -37,5 +38,8 @@ router.put("/:id/accept-friend", acceptFriendRequest);
 
 // PUT /api/users/:id/remove-friend
 router.put("/:id/remove-friend", removeFriend);
+
+// POST /api/users/login
+router.post("/login", loginUser);
 
 module.exports = router;
