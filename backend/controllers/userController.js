@@ -280,17 +280,14 @@ const declineFriendRequest = async (req, res) => {
     const { senderId } = req.body;
 
     const receiver = await User.findById(receiverId);
-
     if (!receiver) {
       return res.status(404).json({ message: "User not found" });
     }
 
     receiver.friendRequests = receiver.friendRequests.filter(
-      (requestId) => !idMatches(requestId, senderId)
     );
 
     await receiver.save();
-
     res.status(200).json({ message: "Friend request declined" });
   } catch (err) {
     res.status(400).json({ message: "Error declining friend request", error: err.message });

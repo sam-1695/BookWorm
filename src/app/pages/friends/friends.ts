@@ -152,7 +152,6 @@ export class Friends implements OnInit {
       next: () => {
         this.showMessage('Request declined.');
         this.refreshCurrentUser();
-        this.loadAllUsers();
       },
       error: (err) => this.showMessage(err.error?.message || 'Could not decline request.', true),
     });
