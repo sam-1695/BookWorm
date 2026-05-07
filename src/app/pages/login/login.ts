@@ -13,7 +13,9 @@ import { AuthService } from '../../services/auth.service';
 export class Login {
   email: string = '';
   password: string = '';
+  username: string = '';
   errorMessage: string = '';
+  isRegistering: boolean = false;
 
   constructor(
     private authService: AuthService,
@@ -32,5 +34,23 @@ export class Login {
         this.errorMessage = err.error?.message || 'Login failed. Please try again.';
       }
     });
+  }
+
+  onRegister(): void {
+    this.errorMessage = '';
+    this.authService.register(this.username, this.email, this.password).subscribe({
+      next: () => {
+        // After registering, log them in automatically
+        this.onLogin();
+      },
+      error: (err) => {
+        this.errorMessage = err.error?.message || 'Registration failed. Please try again.';
+      }
+    });
+  }
+
+  toggleMode(): void {
+    this.isRegistering = !this.isRegistering;
+    this.errorMessage = '';
   }
 }

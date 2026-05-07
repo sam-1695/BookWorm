@@ -1,9 +1,24 @@
 <div class="login-page">
   <div class="login-card">
     <h1>Book Worm</h1>
-    <p>Log in to view your profile, library, friends, and reviews.</p>
+    <p>{{ isRegistering ? 'Create an account to get started.' : 'Log in to view your profile, library, friends, and reviews.' }}</p>
 
-    <form (ngSubmit)="onLogin()">
+    <p class="error-message" *ngIf="errorMessage">{{ errorMessage }}</p>
+
+    <form (ngSubmit)="isRegistering ? onRegister() : onLogin()">
+
+      <div class="form-group" *ngIf="isRegistering">
+        <label for="username">Username</label>
+        <input
+          id="username"
+          name="username"
+          type="text"
+          [(ngModel)]="username"
+          placeholder="Choose a username"
+          required
+        />
+      </div>
+
       <div class="form-group">
         <label for="email">Email</label>
         <input
@@ -28,11 +43,12 @@
         />
       </div>
 
-      <p class="error-message" *ngIf="errorMessage">
-        {{ errorMessage }}
-      </p>
+      <button type="submit">{{ isRegistering ? 'Register' : 'Log In' }}</button>
 
-      <button type="submit">Log In</button>
     </form>
+
+    <button class="toggle-btn" type="button" (click)="toggleMode()">
+      {{ isRegistering ? 'Already have an account? Log in' : "Don't have an account? Register" }}
+    </button>
   </div>
 </div>
