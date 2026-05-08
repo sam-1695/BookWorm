@@ -149,6 +149,50 @@
 
             <h3>{{ book.title }}</h3>
             <p>{{ book.author }}</p>
+
+            <!-- ── Already reviewed: show stars ── -->
+            <div class="already-reviewed" *ngIf="getExistingReview(getListBookId(book)); else showReviewBtn">
+              <span class="review-stars-small">
+                {{ getExistingReview(getListBookId(book))?.rating }}/5 ★ Reviewed
+              </span>
+            </div>
+ 
+            <!-- ── Not reviewed: show Review button & form ── -->
+            <ng-template #showReviewBtn>
+              <button class="review-button" type="button" (click)="openReviewForm(getListBookId(book))">
+                <mat-icon>star_rate</mat-icon>
+                {{ reviewingBookId === getListBookId(book) ? 'Cancel' : 'Review' }}
+              </button>
+ 
+              <div class="review-form" *ngIf="reviewingBookId === getListBookId(book)">
+                <div class="form-group">
+                  <label>Rating (1–5)</label>
+                  <input
+                    type="number"
+                    min="1"
+                    max="5"
+                    [(ngModel)]="reviewRating"
+                    [name]="'rating-' + getListBookId(book)"
+                  />
+                </div>
+                <div class="form-group">
+                  <label>Comment <span class="char-count">({{ reviewComment.length }}/200)</span></label>
+                  <textarea
+                    [(ngModel)]="reviewComment"
+                    [name]="'comment-' + getListBookId(book)"
+                    placeholder="What did you think?"
+                    rows="3"
+                    maxlength="200"
+                  ></textarea>
+                </div>
+                <div class="form-actions">
+                  <button class="primary-button" type="button" (click)="submitReview(getListBookId(book))">Submit</button>
+                  <button class="secondary-button" type="button" (click)="cancelReview()">Cancel</button>
+                </div>
+              </div>
+            </ng-template>
+
+            
           </div>
         </div>
 

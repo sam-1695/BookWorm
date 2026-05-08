@@ -7,6 +7,7 @@ import { UserService } from '../../services/user.service';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { Book } from '../../book/book-interface';
+import { ReviewService } from '../../services/review.service';
 
 @Component({
   selector: 'app-profile',
@@ -25,12 +26,15 @@ export class Profile implements OnInit {
   availableBooks: Book[] = [];
   selectedRecentReadBookId: string = '';
 
+  userReviews: any[] = [];
+
   private booksApiUrl = 'http://localhost:3000/api/books';
 
   constructor(
     private listService: ListService,
     private authService: AuthService,
     private userService: UserService,
+    private reviewSource: ReviewService,
     private router: Router,
     private http: HttpClient
   ) {
@@ -55,6 +59,7 @@ export class Profile implements OnInit {
 
     this.loadBooks();
     this.refreshCurrentUser();
+    this.loadReviews();
   }
 
   refreshCurrentUser(): void {
@@ -91,6 +96,34 @@ export class Profile implements OnInit {
     });
   }
 
+  // reviews 
+ 
+  loadReviews(): void {
+    if (!this.currentUser) return;
+ 
+    this.reviewSource.getReviewsByUser(this.currentUser._id).subscribe({
+      next: (reviews) => { this.userReviews = reviews; },
+      error: (err) => console.error('Error loading reviews:', err)
+    });
+  }
+ 
+  getStars(rating: number): string {
+    return '★'.repeat(rating) + '☆'.repeat(5 - rating);
+  }
+ 
+  deleteReview(reviewId: string): void {
+    if (!window.confirm('Are you sure you want to delete this review?')) return;
+ 
+    this.reviewSource.deleteReview(reviewId).subscribe({
+      next: () => {
+        this.userReviews = this.userReviews.filter((r) => r._id !== reviewId);
+      },
+      error: (err) => console.error('Error deleting review:', err)
+    });
+  }
+
+  // bio
+
   startEditingBio(): void {
     this.isEditingBio = true;
     this.saveMessage = '';
@@ -121,6 +154,8 @@ export class Profile implements OnInit {
       }
     });
   }
+
+  // profile photo
 
   onProfilePictureSelected(event: Event): void {
     if (!this.currentUser) {
@@ -155,6 +190,8 @@ export class Profile implements OnInit {
 
     reader.readAsDataURL(file);
   }
+
+  // recent reads
 
   addRecentRead(): void {
     if (!this.currentUser || !this.selectedRecentReadBookId) {
@@ -195,6 +232,8 @@ export class Profile implements OnInit {
       }
     });
   }
+
+  // helpers
 
   getBookId(book: any): string {
     return book._id || book.id || '';

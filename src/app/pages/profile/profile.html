@@ -63,9 +63,6 @@
       <h3 class="section-label">friends</h3>
 
       <div class="friends-list">
-        <div class="friend-avatar" *ngFor="let friend of mockFriends">
-          <img [src]="friend.avatar" [alt]="friend.username">
-        </div>
 
         <a routerLink="/friends" class="friend-avatar more" title="Go to friends page">
           <mat-icon>arrow_forward</mat-icon>
@@ -75,6 +72,9 @@
   </header>
 
   <hr class="divider">
+
+
+  <!-- library -->
 
   <section class="library-section">
     <h2 class="section-title">my library</h2>
@@ -105,6 +105,8 @@
   </section>
 
   <hr class="divider">
+
+  <!-- Recent Reads  -->
 
   <section class="recent-reads-section">
   <h2 class="section-title">recent reads</h2>
@@ -153,5 +155,49 @@
   <ng-template #noRecentReads>
     <p class="empty-msg">No recent reads yet.</p>
   </ng-template>
-</section>
+  </section>
+
+  <hr class="divider">
+ 
+  <!-- Reviews -->
+  <section class="reviews-section">
+    <h2 class="section-title">{{ currentUser.username }}'s reviews</h2>
+ 
+    <p class="empty-msg" *ngIf="userReviews.length === 0">
+      No reviews yet. Head to your Library to review a book!
+    </p>
+ 
+    <div class="review-card" *ngFor="let review of userReviews">
+      <div class="review-header">
+        <div class="review-book-info">
+          <img
+            *ngIf="review.bookId?.coverPhoto"
+            [src]="review.bookId.coverPhoto"
+            [alt]="review.bookId?.title"
+            class="review-cover"
+          />
+          <div *ngIf="!review.bookId?.coverPhoto" class="review-cover-placeholder">
+            <mat-icon>menu_book</mat-icon>
+          </div>
+          <div>
+            <p class="review-book-title">{{ review.bookId?.title }}</p>
+            <p class="review-book-author">{{ review.bookId?.author }}</p>
+            <span class="review-stars">{{ getStars(review.rating) }}</span>
+          </div>
+        </div>
+ 
+        <button
+          class="delete-review-button"
+          type="button"
+          (click)="deleteReview(review._id)"
+          title="Delete review"
+        >
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+ 
+      <p class="review-comment" *ngIf="review.comment">{{ review.comment }}</p>
+    </div>
+  </section>
+
 </div>
