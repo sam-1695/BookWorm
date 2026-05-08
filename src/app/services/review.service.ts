@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class ReviewService {
-  private apiUrl = 'http://localhost:3000/api/reviews';
+  private apiUrl = 'https://bookworm-backend-pl2t.onrender.com/api/reviews';
 
   constructor(private http: HttpClient) {}
 

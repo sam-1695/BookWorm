@@ -7,7 +7,7 @@ import { BookList } from './list-interface';
   providedIn: 'root'
 })
 export class ListService {
-  private apiUrl = 'http://localhost:3000/api/lists';
+  private apiUrl = 'https://bookworm-backend-pl2t.onrender.com/api/lists';
 
   // ANGULAR SERVICE & OBSERVABLE
   // Angular Service using BehaviorSubject asObservable() to stream list data to components

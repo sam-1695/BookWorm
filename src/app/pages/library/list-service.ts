@@ -7,7 +7,7 @@ import { BookList } from './list-interface';
   providedIn: 'root'
 })
 export class ListService {
-  private apiUrl = 'http://localhost:3000/api/lists';
+  private apiUrl = 'https://bookworm-backend-pl2t.onrender.com/api/lists';
 
   private lists = new BehaviorSubject<BookList[]>([]);
   lists$ = this.lists.asObservable();
