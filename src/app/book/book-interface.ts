@@ -1,3 +1,5 @@
+// INTERFACES & TYPE USAGE
+// defines Book data type
 export interface Book {
   _id?: string;
   id?: string | null;

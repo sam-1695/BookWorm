@@ -411,8 +411,70 @@
 }
 
 .save-message {
-    margin-top: 12px;
-    color: #6f4e37;
-    font-size: 14px;
-    font-weight: 500;
+  margin-top: 12px;
+  color: #6f4e37;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.friend-avatar.more:hover {
+  background-color: #f0e7dc;
+}
+
+.review-card {
+  background: #fafafa;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  padding: 14px;
+  margin-bottom: 12px;
+}
+
+.review-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.review-book-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.review-cover {
+  width: 40px;
+  height: 55px;
+  object-fit: cover;
+  border-radius: 3px;
+}
+
+.review-book-title { font-weight: 600; margin: 0; }
+.review-book-author { color: #666; margin: 0; font-size: 13px; }
+.review-stars { font-size: 18px; color: #f5a623; }
+.review-comment { margin-top: 8px; color: #444; }
+
+.review-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.delete-review-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #e53935;
+  padding: 0;
+}
+
+.review-cover-placeholder {
+  width: 40px;
+  height: 55px;
+  background: #eee;
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #999;
+}
 }

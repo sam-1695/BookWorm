@@ -4,6 +4,10 @@ import { Observable } from 'rxjs';
 import { BookList } from './list-interface';
 import { BookService } from '../../book/book-service';
 import { Book } from '../../book/book-interface';
+import { ReviewService } from '../../services/review.service';
+import { AuthService, CurrentUser } from '../../services/auth.service';
+import { Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-library',
@@ -17,14 +21,30 @@ export class Library implements OnInit {
   
   newListName: string = '';
   selectedBookIds: string[] = [];
-  showCreateListForm: boolean = false;
+showCreateListForm: boolean = false;
   message: string = '';
   errorMessage: string = '';
-  
+
   // Track which lists are in "Add Book" mode
   isAdding: { [listId: string]: boolean } = {};
+  selectedBookByListId: { [listId: string]: string } = {};
 
-  constructor(private listService: ListService, private bookService: BookService) {
+  // review state
+  reviewingBookId: string | null = null;
+  reviewRating: number = 0;
+  reviewComment: string = '';
+  reviewedBookMap: { [bookId: string]: any } = {};
+
+  private booksApiUrl = 'http://localhost:3000/api/books';
+
+  constructor(
+    private listService: ListService,
+    private bookService: BookService,
+    private authService: AuthService,
+    private reviewService: ReviewService,
+    private router: Router,
+    private http: HttpClient
+  ) {
     this.lists$ = this.listService.lists$;
   }
 
@@ -36,6 +56,24 @@ export class Library implements OnInit {
     this.bookService.getPosts();
     this.bookService.getBookUpdateListener().subscribe((books: Book[]) => {
       this.availableBooks = books;
+    });
+  }
+
+  // Load the current user's reviews and build a bookId -> review map
+  loadUserReviews(): void {
+    if (!this.currentUser) return;
+ 
+    this.reviewService.getReviewsByUser(this.currentUser._id).subscribe({
+      next: (reviews) => {
+        this.reviewedBookMap = {};
+        reviews.forEach((review) => {
+          const bookId = review.bookId?._id || review.bookId;
+          if (bookId) {
+            this.reviewedBookMap[bookId] = review;
+          }
+        });
+      },
+      error: (err) => console.error('Error loading user reviews:', err)
     });
   }
 
@@ -103,6 +141,56 @@ export class Library implements OnInit {
   addSuggestionToList(listId: string, bookId: string): void {
     this.listService.addBookToList(listId, bookId).subscribe();
   }
+
+// review methods
+
+  openReviewForm(bookId: string): void {
+    this.reviewingBookId = this.reviewingBookId === bookId ? null : bookId;
+    this.reviewRating = 5;
+    this.reviewComment = '';
+    this.message = '';
+    this.errorMessage = '';
+  }
+
+  submitReview(bookId: string): void {
+    if (!this.currentUser) return;
+
+    if (!this.reviewRating || this.reviewRating < 1 || this.reviewRating > 5) {
+      this.errorMessage = 'Please enter a rating between 1 and 5.';
+      return;
+    }
+
+    this.reviewService.createReview(
+      this.currentUser._id,
+      bookId,
+      this.reviewRating,
+      this.reviewComment
+    ).subscribe({
+      next: (newReview) => {
+        this.message = 'Review submitted!';
+        this.reviewingBookId = null;
+        this.reviewRating = 5;
+        this.reviewComment = '';
+        this.reviewedBookMap[bookId] = newReview;
+      },
+      error: (err) => {
+        console.error('Error submitting review:', err);
+        this.errorMessage = 'Could not submit review.';
+      },
+    });
+  }
+
+  cancelReview(): void {
+    this.reviewingBookId = null;
+    this.reviewRating = 5;
+    this.reviewComment = '';
+  }
+
+  getExistingReview(bookId: string): any {
+    return this.reviewedBookMap[bookId] || null;
+  }
+
+  // helper methods
 
   getBookId(book: any): string {
     return book._id || book.id || '';

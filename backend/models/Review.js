@@ -1,3 +1,4 @@
+// Mongoose Schema Model 2: Review (userId ref, bookId ref, rating, comment)
 const mongoose = require("mongoose");
 
 const reviewSchema = new mongoose.Schema({

@@ -8,6 +8,7 @@ const debug = require("debug")("node-angular");
 // import { URL } from "url";
 // import crypto from "crypto";
 
+// PORT NORMALIZATION
 // Normalize a port into a number, string, or false.
 const normalizedPort = (val) => {
   const port = parseInt(val, 10);
@@ -93,6 +94,7 @@ const onError = error => {
 };
 
 
+// MANUAL HTTP SERVER
 const server = http.createServer((req, res) => {
   try {
     // Parse URL safely
@@ -165,8 +167,10 @@ const server = http.createServer((req, res) => {
   }
 });
 
+// ERROR LISTENER with EACCES & EADDRINUSE CASES
 server.on("clientError", (_err, socket) => socket.end("HTTP/1.1 400 Bad Request\r\n\r\n"));
 
+// LISTENING LISTENER
 server.listen(PORT, HOST, () => {
   console.log(`Listening on http://${HOST}:${PORT}`);
 });

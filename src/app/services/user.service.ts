@@ -18,6 +18,8 @@ export class UserService {
     return this.http.get<any>(`${this.apiUrl}/${id}`);
   }
 
+  // ANGULAR SERVICE & OBSERVABLE
+  // angular service with observable-based HTTP calls for user/friend operations
   sendFriendRequest(receiverId: string, senderId: string): Observable<any> {
     return this.http.put(`${this.apiUrl}/${receiverId}/friend-request`, { senderId });
   }

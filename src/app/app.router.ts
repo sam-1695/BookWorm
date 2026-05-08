@@ -7,6 +7,8 @@ import { Profile } from './pages/profile/profile';
 import { Friends } from './pages/friends/friends';
 import { Explore } from './pages/explore/explore';
 
+// ANGULAR ROUTING
+// defines all app routes using Angular Router
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'login', component: Login },

@@ -33,6 +33,8 @@ export class AuthService {
     return this.http.post(`${this.apiUrl}`, { username, email, password });
   }
 
+  // ANGULAR SERVICE & OBSERVABLE
+  // angular service using HttpClient + observable for login
   login(email: string, password: string): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(`${this.apiUrl}/login`, {
       email,
