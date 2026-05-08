@@ -1,22 +1,24 @@
-<mat-toolbar class="header">
-  <a routerLink="/explore" class="brand">
+<mat-toolbar class="header-toolbar">
+  <!-- Brand Logo/Text -->
+  <a routerLink="/explore" class="premium-brand">
     Book Worm
   </a>
 
   <span class="spacer"></span>
-
-  <ng-container *ngIf="currentUser$ | async as currentUser; else loggedOutLinks">
-    <a routerLink="/explore" mat-button>Explore</a>
-    <a routerLink="/library" mat-button>Library</a>
-    <a routerLink="/friends" mat-button>Friends</a>
-    <a routerLink="/profile" mat-button>Profile</a>
-    <button mat-raised-button color="primary" type="button" (click)="logout()">
-      Logout
+  
+  <!-- Only show logout button if logged in -->
+  <ng-container *ngIf="currentUser$ | async">
+    <button class="premium-logout-btn" type="button" (click)="logout()">
+      <mat-icon>logout</mat-icon>
+      <span>Logout</span>
     </button>
   </ng-container>
 
-  <ng-template #loggedOutLinks>
-    <a routerLink="/explore" mat-button>Explore</a>
-    <a routerLink="/login" mat-raised-button color="primary">Login</a>
-  </ng-template>
+  <!-- Show login button if logged out -->
+  <ng-container *ngIf="!(currentUser$ | async)">
+    <a routerLink="/login" class="premium-login-btn">
+      <mat-icon>login</mat-icon>
+      <span>Login</span>
+    </a>
+  </ng-container>
 </mat-toolbar>

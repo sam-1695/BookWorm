@@ -1,105 +1,110 @@
 <div class="friends-page">
+  <div class="friends-header">
+    <div class="header-main">
+      <h1>Friends Hub</h1>
+      <p>Connect with other bookworms and see what they're reading.</p>
+    </div>
+    
+    <button class="toggle-search-btn" type="button" (click)="toggleSearch()">
+      <mat-icon>{{ isSearching ? 'close' : 'person_add' }}</mat-icon>
+      {{ isSearching ? 'Done' : 'Add Friend' }}
+    </button>
+  </div>
 
   <!-- Status message banner -->
   <div *ngIf="statusMessage" class="status-banner" [class.error]="statusIsError">
-    {{ statusMessage }}
+    <mat-icon>{{ statusIsError ? 'error' : 'check_circle' }}</mat-icon>
+    <span>{{ statusMessage }}</span>
   </div>
 
-  <!-- ── Pending Friend Requests ───────────────────────────── -->
-  <mat-card class="section-card" *ngIf="friendRequests.length > 0">
-    <mat-card-header>
-      <mat-card-title>
-        <mat-icon>person_add</mat-icon>
-        Friend Requests ({{ friendRequests.length }})
-      </mat-card-title>
-    </mat-card-header>
+  <!-- ── Find New Friends (Search) ─────────────────────────── -->
+  <section class="search-section" *ngIf="isSearching">
+    <div class="search-box">
+      <mat-icon>search</mat-icon>
+      <input type="text" [(ngModel)]="searchQuery" placeholder="Search by username or email...">
+    </div>
 
-    <mat-card-content>
-      <div class="user-row" *ngFor="let request of friendRequests">
-        <div class="user-info">
-          <mat-icon class="avatar-icon">account_circle</mat-icon>
-          <div>
-            <p class="username">{{ request.username }}</p>
-            <p class="email">{{ request.email }}</p>
-          </div>
+    <div class="search-results-grid" *ngIf="searchQuery.trim() && searchResults.length > 0">
+      <div class="user-card result-card" *ngFor="let user of searchResults">
+        <div class="user-avatar-wrapper">
+          <img *ngIf="user.profilePicture" [src]="user.profilePicture" class="user-avatar">
+          <mat-icon *ngIf="!user.profilePicture" class="avatar-placeholder">account_circle</mat-icon>
         </div>
-        <div class="action-buttons">
-          <button mat-flat-button color="primary" (click)="acceptRequest(request._id || request)">
-            Accept
-          </button>
-          <button mat-stroked-button (click)="declineRequest(request._id || request)">
-            Decline
+        <div class="user-details">
+          <h3 class="user-name">{{ user.username }}</h3>
+          <p class="user-email">{{ user.email }}</p>
+          <button class="add-friend-btn" (click)="sendRequest(user._id)">
+            <mat-icon>person_add</mat-icon>
+            Add
           </button>
         </div>
       </div>
-    </mat-card-content>
-  </mat-card>
+    </div>
+    
+    <p class="empty-msg" *ngIf="searchQuery.trim() && searchResults.length === 0">
+      No users found matching your search.
+    </p>
+  </section>
 
-  <!-- ── Current Friends ───────────────────────────────────── -->
-  <mat-card class="section-card">
-    <mat-card-header>
-      <mat-card-title>
-        <mat-icon>group</mat-icon>
-        My Friends ({{ friends.length }})
-      </mat-card-title>
-    </mat-card-header>
+  <!-- ── Friend Requests ──────────────────────────────────── -->
+  <section class="requests-section" *ngIf="friendRequests.length > 0">
+    <div class="section-header">
+      <h2>Pending Requests</h2>
+      <span class="count-badge">{{ friendRequests.length }}</span>
+    </div>
 
-    <mat-card-content>
-      <p class="empty-state" *ngIf="friends.length === 0">
-        You haven't added any friends yet. Search below to find people!
-      </p>
-
-      <div class="user-row" *ngFor="let friend of friends">
-        <div class="user-info">
-          <mat-icon class="avatar-icon">account_circle</mat-icon>
+    <div class="requests-grid">
+      <div class="request-card" *ngFor="let request of friendRequests">
+        <div class="request-info">
+          <div class="request-avatar">
+            <img *ngIf="request.profilePicture" [src]="request.profilePicture">
+            <mat-icon *ngIf="!request.profilePicture">person</mat-icon>
+          </div>
           <div>
-            <p class="username">{{ friend.username }}</p>
-            <p class="email">{{ friend.email }}</p>
+            <h3 class="request-name">{{ request.username }}</h3>
+            <p class="request-status">wants to be your friend</p>
           </div>
         </div>
-        <div class="action-buttons">
-          <button mat-icon-button color="warn" (click)="removeFriend(friend._id || friend)" title="Remove friend">
-            <mat-icon>delete</mat-icon>
-          </button>
+        <div class="request-actions">
+          <button class="btn-accept" (click)="acceptRequest(request._id || request)">Accept</button>
+          <button class="btn-decline" (click)="declineRequest(request._id || request)">Decline</button>
         </div>
       </div>
-    </mat-card-content>
-  </mat-card>
+    </div>
+  </section>
 
-  <!-- ── Find New Friends ──────────────────────────────────── -->
-  <mat-card class="section-card">
-    <mat-card-header>
-      <mat-card-title>
-        <mat-icon>search</mat-icon>
-        Find Friends
-      </mat-card-title>
-    </mat-card-header>
+  <!-- ── My Friends ────────────────────────────────────────── -->
+  <section class="friends-grid-section">
+    <div class="section-header">
+      <h2>My Friends</h2>
+      <span class="count-badge">{{ friends.length }}</span>
+    </div>
 
-    <mat-card-content>
-      <mat-form-field appearance="outline" class="search-field">
-        <mat-label>Search by username or email</mat-label>
-        <input matInput [(ngModel)]="searchQuery" placeholder="e.g. bookworm42" />
-        <mat-icon matSuffix>search</mat-icon>
-      </mat-form-field>
-
-      <p class="empty-state" *ngIf="searchQuery.trim() && searchResults.length === 0">
-        No users found, or they're already your friend.
-      </p>
-
-      <div class="user-row" *ngFor="let user of searchResults">
-        <div class="user-info">
-          <mat-icon class="avatar-icon">account_circle</mat-icon>
-          <div>
-            <p class="username">{{ user.username }}</p>
-            <p class="email">{{ user.email }}</p>
+    <div class="friends-grid" *ngIf="friends.length > 0; else noFriends">
+      <div class="friend-card" *ngFor="let friend of friends">
+        <div class="friend-card-content">
+          <div class="friend-avatar-main">
+            <img *ngIf="friend.profilePicture" [src]="friend.profilePicture">
+            <mat-icon *ngIf="!friend.profilePicture">person</mat-icon>
+          </div>
+          <h3 class="friend-name">{{ friend.username }}</h3>
+          <p class="friend-email">{{ friend.email }}</p>
+          
+          <div class="friend-actions">
+            <button class="btn-remove" (click)="removeFriend(friend._id || friend)" title="Remove friend">
+              <mat-icon>delete_outline</mat-icon>
+            </button>
           </div>
         </div>
-        <button mat-flat-button color="accent" (click)="sendRequest(user._id)">
-          <mat-icon>person_add</mat-icon>
-          Add Friend
-        </button>
       </div>
-    </mat-card-content>
-  </mat-card>
+    </div>
+
+    <ng-template #noFriends>
+      <div class="empty-state-friends">
+        <mat-icon>people_outline</mat-icon>
+        <p>Your friends list is empty. Click "Add Friend" above to find people!</p>
+      </div>
+    </ng-template>
+  </section>
 
 </div>

@@ -1,0 +1,81 @@
+.book-list-container {
+    padding: 24px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.book-list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 32px;
+}
+
+.book-list-header h1 {
+    margin: 0;
+    font-size: 32px;
+    color: #3b2a20;
+}
+
+.book-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 24px;
+}
+
+.book-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border-radius: 16px;
+    transition: transform 0.2s, box-shadow 0.2s;
+    background: #fff;
+    border: 1px solid #ead9c8;
+}
+
+.book-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(59, 42, 32, 0.12);
+}
+
+.book-body {
+    display: flex;
+    gap: 16px;
+    padding: 16px;
+}
+
+.book-image {
+    width: 100px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+mat-card-content {
+    flex: 1;
+}
+
+mat-card-content p {
+    margin: 0;
+    font-size: 14px;
+    color: #6b5b50;
+    line-height: 1.5;
+    display: -webkit-box;
+    -webkit-line-clamp: 5;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+mat-card-actions {
+    padding: 8px 16px;
+    border-top: 1px solid #f5e9dd;
+}
+
+.empty-msg {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 48px;
+    color: #7a6a5f;
+    font-style: italic;
+}

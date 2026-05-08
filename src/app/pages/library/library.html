@@ -106,24 +106,38 @@
           </button>
         </div>
 
-        <div class="add-to-list-row">
-          <select
-            [(ngModel)]="selectedBookByListId[list._id]"
-            [name]="'addBook' + list._id"
-          >
-            <option value="">Choose a book to add</option>
-
-            <option
-              *ngFor="let book of availableBooks"
-              [value]="getBookId(book)"
-            >
-              {{ book.title }} by {{ book.author }}
-            </option>
-          </select>
-
-          <button type="button" (click)="addBookToList(list._id)">
-            Add Book
+        <div class="add-book-section">
+          <button class="toggle-add-btn" type="button" (click)="toggleAdd(list._id)">
+            <mat-icon>{{ isAdding[list._id] ? 'close' : 'add' }}</mat-icon>
+            {{ isAdding[list._id] ? 'Done Adding' : 'Add Books' }}
           </button>
+
+          <div class="suggestion-gallery" *ngIf="isAdding[list._id]">
+            <p class="suggestion-hint" *ngIf="getSuggestions(list).length > 0">Tap a cover to add to this list:</p>
+            <div class="suggestion-row">
+              <!-- Shortcut to create a new book -->
+              <div class="suggestion-item create-new-item" routerLink="/create">
+                <div class="suggestion-cover-wrapper create-new-wrapper">
+                  <mat-icon>add_circle_outline</mat-icon>
+                  <span class="create-new-text">New Book</span>
+                </div>
+              </div>
+
+              <div class="suggestion-item" *ngFor="let book of getSuggestions(list)" 
+                   (click)="addSuggestionToList(list._id, getBookId(book))">
+                <div class="suggestion-cover-wrapper">
+                  <img *ngIf="book.coverPhoto" [src]="book.coverPhoto" [alt]="book.title" />
+                  <div class="suggestion-placeholder" *ngIf="!book.coverPhoto">
+                    <mat-icon>book</mat-icon>
+                  </div>
+                  <div class="add-overlay">
+                    <mat-icon>add</mat-icon>
+                  </div>
+                </div>
+                <span class="suggestion-title">{{ book.title }}</span>
+              </div>
+            </div>
+          </div>
         </div>
 
         <div class="book-cover-row" *ngIf="list.books.length > 0; else noBooks">
@@ -154,7 +168,7 @@
 
         <ng-template #noBooks>
           <p class="no-books-message">
-            No books in this list yet. Use the dropdown above to add one.
+            No books in this list yet. Click "Add Books" above to get started.
           </p>
         </ng-template>
       </article>

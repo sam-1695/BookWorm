@@ -81,6 +81,10 @@ export class BookCreate {
     form.resetForm();
   }
 
+  onCancel() {
+    this.router.navigate(['/library']);
+  }
+
   ngOnDestroy(): void {
     this.postsSub?.unsubscribe();
   }

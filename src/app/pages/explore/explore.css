@@ -167,12 +167,13 @@
 }
 
 .book-cover {
-    width: 100%;
+    width: 180px;
     height: 260px;
     border-radius: 12px;
     overflow: hidden;
     margin-bottom: 12px;
     box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    background-color: #f1e7dc; /* Placeholder color while loading */
 }
 
 .book-cover img {

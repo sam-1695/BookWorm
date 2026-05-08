@@ -1,18 +1,38 @@
-<mat-accordion *ngIf="(books$ | async) as books">
-    <mat-expansion-panel *ngFor="let book of books">
-        <mat-expansion-panel-header>
-            <mat-panel-title>{{ book.title }}</mat-panel-title>
-            <mat-panel-description>{{ book.author }}</mat-panel-description>
-        </mat-expansion-panel-header>
-        <div class="book-content" style="display: flex; gap: 1rem; align-items: flex-start;">
-            <img *ngIf="book.coverPhoto" [src]="book.coverPhoto" [alt]="book.title" style="max-width: 150px; border-radius: 4px;">
-            <p>{{ book.description }}</p>
-        </div>
-        <mat-action-row>
-            <a mat-button [routerLink]="['/edit', book.id]">EDIT</a>
-            <button mat-button color="warn" (click)="onDelete(book.id)">DELETE</button>
-        </mat-action-row>
-    </mat-expansion-panel>
+<div class="book-list-container">
+    <div class="book-list-header">
+        <h1>All Books</h1>
+        <a routerLink="/create" mat-raised-button color="primary">
+            <mat-icon>add</mat-icon>
+            Add New Book
+        </a>
+    </div>
 
-    <p *ngIf="books.length === 0">No books added yet!</p>
-</mat-accordion>
+    <div class="book-grid" *ngIf="(books$ | async) as books">
+        <mat-card *ngFor="let book of books" class="book-card">
+            <mat-card-header>
+                <mat-card-title>{{ book.title }}</mat-card-title>
+                <mat-card-subtitle>{{ book.author }}</mat-card-subtitle>
+            </mat-card-header>
+            
+            <div class="book-body">
+                <img *ngIf="book.coverPhoto" [src]="book.coverPhoto" [alt]="book.title" class="book-image">
+                <mat-card-content>
+                    <p>{{ book.description }}</p>
+                </mat-card-content>
+            </div>
+
+            <mat-card-actions align="end">
+                <a mat-button [routerLink]="['/edit', book.id]">
+                    <mat-icon>edit</mat-icon>
+                    EDIT
+                </a>
+                <button mat-button color="warn" (click)="onDelete(book.id)">
+                    <mat-icon>delete</mat-icon>
+                    DELETE
+                </button>
+            </mat-card-actions>
+        </mat-card>
+
+        <p class="empty-msg" *ngIf="books.length === 0">No books added yet!</p>
+    </div>
+</div>

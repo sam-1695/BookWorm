@@ -31,6 +31,8 @@ export class Library implements OnInit {
   message = '';
   errorMessage = '';
 
+  isAdding: { [listId: string]: boolean } = {};
+
   private booksApiUrl = 'http://localhost:3000/api/books';
 
   constructor(
@@ -185,11 +187,33 @@ export class Library implements OnInit {
     });
   }
 
+  toggleAdd(listId: string): void {
+    this.isAdding[listId] = !this.isAdding[listId];
+  }
+
   getBookId(book: Book): string {
     return book._id || book.id || '';
   }
 
   getListBookId(book: any): string {
     return book._id || book.id || '';
+  }
+
+  getSuggestions(list: BookList): Book[] {
+    const listBookIds = list.books.map(b => this.getListBookId(b));
+    return this.availableBooks.filter(b => !listBookIds.includes(this.getBookId(b))).slice(0, 5);
+  }
+
+  addSuggestionToList(listId: string, bookId: string): void {
+    this.listService.addBookToList(listId, bookId).subscribe({
+      next: () => {
+        this.message = 'Book added to list!';
+        this.loadUserLists();
+      },
+      error: (err) => {
+        console.error('Error adding suggestion:', err);
+        this.errorMessage = 'Could not add book.';
+      }
+    });
   }
 }

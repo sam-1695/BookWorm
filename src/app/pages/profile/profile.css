@@ -1,6 +1,9 @@
 .profile-page {
     width: 100%;
     font-family: 'Roboto', sans-serif;
+    padding: 32px;
+    max-width: 1100px;
+    margin: 0 auto;
 }
 
 /* Header */
@@ -8,64 +11,212 @@
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    margin-bottom: 20px;
+    margin-bottom: 40px;
 }
 
 .profile-section {
     display: flex;
     align-items: center;
-    gap: 20px;
+    gap: 32px;
 }
 
-.profile-avatar {
+/* Avatar Styling */
+.avatar-container {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    overflow: hidden;
+    background: #f1e7dc;
+    border: 3px solid white;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.profile-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.placeholder-icon {
+    font-size: 80px;
     width: 80px;
     height: 80px;
-    border: 2px solid #333;
-    border-radius: 50%;
+    margin: 20px;
+    color: #a07652;
+}
+
+.upload-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(59, 42, 32, 0.7);
+    color: white;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    opacity: 0.9;
+    transition: background 0.2s;
 }
 
-.profile-avatar mat-icon {
-    font-size: 50px;
-    width: 50px;
-    height: 50px;
+.upload-overlay:hover {
+    background: rgba(59, 42, 32, 0.85);
 }
 
-.profile-info .username {
+.upload-overlay mat-icon {
+    font-size: 32px;
+    width: 32px;
+    height: 32px;
+    margin-bottom: 4px;
+}
+
+.upload-overlay span {
+    font-size: 12px;
+    font-weight: 600;
+}
+
+/* Profile Info */
+.profile-info {
+    flex: 1;
+}
+
+.name-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 8px;
+}
+
+.username {
     margin: 0;
-    font-size: 24px;
+    font-size: 32px;
+    color: #3b2a20;
     font-weight: 500;
 }
 
-.profile-info .bio {
-    margin: 5px 0 0;
-    color: #666;
-    line-height: 1.2;
+.edit-profile-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: #f5e9dd;
+    color: #6f4e37;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
 }
 
+.edit-profile-btn:hover {
+    background: #ead9c8;
+}
+
+.bio {
+    margin: 0;
+    font-size: 16px;
+    color: #6b5b50;
+    line-height: 1.6;
+    max-width: 500px;
+}
+
+.empty-bio {
+    font-style: italic;
+    opacity: 0.7;
+}
+
+/* Profile Editor */
+.profile-editor {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 8px;
+}
+
+.bio-textarea {
+    width: 100%;
+    max-width: 500px;
+    padding: 12px;
+    border: 1px solid #ead9c8;
+    border-radius: 12px;
+    font-family: inherit;
+    font-size: 15px;
+    background: #fffaf5;
+    outline: none;
+    resize: vertical;
+}
+
+.edit-actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.save-btn {
+    background: #6f4e37;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.cancel-link {
+    background: none;
+    border: none;
+    color: #7a6a5f;
+    text-decoration: underline;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+/* Common Section Styling */
+.section-title {
+    font-size: 24px;
+    margin-bottom: 24px;
+    font-weight: 500;
+    color: #3b2a20;
+}
+
+.divider {
+    border: none;
+    border-top: 1px solid #ead9c8;
+    margin: 32px 0;
+}
+
+/* Friends Section */
 .friends-section {
     text-align: right;
 }
 
 .section-label {
-    margin: 0 0 10px;
-    font-size: 18px;
-    font-weight: 400;
+    margin: 0 0 12px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #a07652;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
 .friends-list {
     display: flex;
-    gap: 10px;
+    gap: 12px;
+    justify-content: flex-end;
 }
 
 .friend-avatar {
-    width: 40px;
-    height: 40px;
-    border: 1px solid #333;
+    width: 44px;
+    height: 44px;
     border-radius: 50%;
     overflow: hidden;
+    border: 2px solid white;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
 .friend-avatar img {
@@ -78,161 +229,190 @@
     display: flex;
     justify-content: center;
     align-items: center;
-}
-
-/* Common Section Styling */
-.section-title {
-    font-size: 28px;
-    margin: 20px 0;
-    font-weight: 400;
-}
-
-.divider {
-    border: none;
-    border-top: 1px solid #ddd;
-    margin: 20px 0;
+    background: #f5e9dd;
+    color: #6f4e37;
+    text-decoration: none;
 }
 
 /* Horizontal Scroll */
 .horizontal-scroll {
     display: flex;
-    gap: 20px;
+    gap: 24px;
     overflow-x: auto;
-    padding-bottom: 10px;
-    scrollbar-width: thin;
-}
-
-.horizontal-scroll::-webkit-scrollbar {
-    height: 6px;
-}
-
-.horizontal-scroll::-webkit-scrollbar-thumb {
-    background: #ccc;
-    border-radius: 10px;
+    padding-bottom: 16px;
 }
 
 /* Library List Cards */
 .list-card {
-    min-width: 160px;
-    height: 220px;
-    border: 2px solid #333;
-    padding: 10px;
-    display: flex;
-    flex-direction: column;
+    min-width: 180px;
+    background: white;
+    border: 1px solid #ead9c8;
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(59, 42, 32, 0.04);
 }
 
 .list-name {
-    margin: 0 0 15px;
-    font-size: 20px;
-    font-weight: 400;
+    margin: 0 0 16px;
+    font-size: 18px;
+    color: #3b2a20;
 }
 
 .book-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    flex: 1;
+    gap: 8px;
 }
 
 .book-square {
-    border: 1.5px solid #333;
-    background-color: #fff;
+    height: 80px;
+    border-radius: 8px;
+    background-color: #f1e7dc;
+    border: 1px solid #ead9c8;
 }
 
 .book-square.empty {
     border-style: dashed;
-    border-color: #999;
 }
 
-/* Recent Reads */
-.recent-read-item {
+/* Recent Reads UI */
+.recent-reads-section {
+    margin-bottom: 40px;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.toggle-add-btn {
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding: 10px 15px;
-    border: 1.5px solid #333;
+    gap: 8px;
+    background: #fdf8f4;
+    border: 1px dashed #6f4e37;
+    color: #6f4e37;
+    padding: 8px 16px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-family: inherit;
+    font-weight: 500;
+}
+
+.suggestion-gallery {
+    margin-bottom: 32px;
+    padding: 24px;
+    background: #fff;
+    border: 1px solid #ead9c8;
+    border-radius: 24px;
+}
+
+.suggestion-row {
+    display: flex;
+    gap: 16px;
+    overflow-x: auto;
+    padding-bottom: 12px;
+}
+
+.suggestion-item {
+    min-width: 100px;
+    max-width: 100px;
+    cursor: pointer;
+}
+
+.suggestion-cover-wrapper {
+    position: relative;
+    width: 100px;
+    height: 145px;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.suggestion-cover-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.add-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(111, 78, 55, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.suggestion-item:hover .add-overlay {
+    opacity: 1;
+}
+
+.create-new-wrapper {
+    background: #fdf8f4;
+    border: 2px dashed #a07652;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    color: #a07652;
+}
+
+/* Book Cover Cards (Recent Reads Display) */
+.book-cover-card {
+    position: relative;
+    min-width: 120px;
+    max-width: 120px;
+}
+
+.book-cover-card img,
+.missing-cover {
+    width: 120px;
+    height: 180px;
+    border-radius: 12px;
+    object-fit: cover;
+    background-color: #f1e7dc;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.16);
+}
+
+.book-cover-card h3 {
+    margin: 10px 0 2px;
+    font-size: 14px;
+    color: #3b2a20;
     white-space: nowrap;
-    background-color: #fff;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
-.book-spine {
-    width: 10px;
-    height: 30px;
-    background-color: #333;
-}
-
-.read-title {
-    font-size: 16px;
-}
-
-.empty-msg {
-    color: #999;
-    font-style: italic;
-}
-
-.profile-avatar {
-  cursor: pointer;
-  overflow: hidden;
-  background-color: #fff;
-}
-
-.profile-avatar img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.empty-bio {
-  color: #999;
-  font-style: italic;
-}
-
-.small-btn {
-  margin-top: 8px;
-  padding: 6px 12px;
-  border: none;
-  border-radius: 8px;
-  background-color: #6f4e37;
-  color: white;
-  cursor: pointer;
-  font-size: 14px;
-}
-
-.small-btn:hover {
-  background-color: #543927;
-}
-
-.small-btn.secondary {
-  background-color: #999;
-}
-
-.bio-editor textarea {
-  width: 280px;
-  max-width: 100%;
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  font-family: inherit;
-  resize: vertical;
-}
-
-.bio-actions {
-  display: flex;
-  gap: 8px;
+.remove-book-button {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    width: 24px;
+    height: 24px;
+    border: none;
+    border-radius: 50%;
+    background-color: #6f4e37;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
 }
 
 .save-message {
-  margin-top: 6px;
-  color: #6f4e37;
-  font-size: 14px;
-}
-
-.friend-avatar.more {
-  color: #333;
-  text-decoration: none;
-  cursor: pointer;
-}
-
-.friend-avatar.more:hover {
-  background-color: #f0e7dc;
+    margin-top: 12px;
+    color: #6f4e37;
+    font-size: 14px;
+    font-weight: 500;
 }
