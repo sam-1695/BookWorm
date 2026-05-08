@@ -1,3 +1,4 @@
+// Mongoose Schema Model 1: User (username, email, password, friends, friendRequests)
 const mongoose = require("mongoose");
 
 const userSchema = new mongoose.Schema({

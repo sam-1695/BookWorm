@@ -1,6 +1,47 @@
 # BookWorm
 
+BookWorm is a full-stack book tracking app where users can log books they've read, create reading lists, write reviews, and add friends to see their reading activity.
+
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.7.
+
+## Deployment
+
+- Frontend: [Insert Angular deployment URL here]
+- Backend: [Insert backend deployment URL here]
+
+## YouTube Presentation
+
+[Insert YouTube link here]
+
+## Tech Stack
+
+- Angular 19
+- Node.js + Express
+- MongoDB + Mongoose
+- Angular Material
+
+## Team
+
+- Mackenzie McAllister - Backend, Functionality
+- Sophia Martin - Database, Functionality
+- Hang Du - Deployment 
+- Samantha Belano - Frontend
+
+## Running the project
+
+Start the backend:
+```bash
+cd backend
+npm install
+npm start
+```
+
+Start the frontend:
+```bash
+npm run start
+```
+
+The app runs at http://localhost:4200 and the API runs at http://localhost:3000.
 
 ## Development server
 

@@ -9,6 +9,8 @@ import { BookList } from './list-interface';
 export class ListService {
   private apiUrl = 'http://localhost:3000/api/lists';
 
+  // ANGULAR SERVICE & OBSERVABLE
+  // Angular Service using BehaviorSubject asObservable() to stream list data to components
   private lists = new BehaviorSubject<BookList[]>([]);
   lists$ = this.lists.asObservable();
 
