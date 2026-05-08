@@ -1,1 +1,81 @@
-<p>explore works!</p>
+<div class="explore-container">
+
+
+    <!-- Hero Section -->
+    <section class="hero-section" *ngIf="featuredBook">
+        <div class="hero-card">
+            <div class="hero-image">
+                <img [src]="featuredBook.coverPhoto" [alt]="featuredBook.title">
+            </div>
+            <div class="hero-content">
+                <span class="badge">BOOK OF THE MONTH</span>
+                <h1 class="hero-title">{{ featuredBook.title }}</h1>
+                <p class="hero-author">by {{ featuredBook.author }}</p>
+                <p class="hero-description">{{ featuredBook.description | slice:0:150 }}...</p>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Categories Sections -->
+    <div class="category-wrapper">
+        
+        <!-- Editor's Picks -->
+        <section class="category-section">
+            <div class="section-header">
+                <h2>Editor's Picks</h2>
+
+            </div>
+            <div class="book-row">
+                <div class="book-card" *ngFor="let book of (editorsPicks$ | async)">
+                    <div class="book-cover">
+                        <img [src]="book.coverPhoto" [alt]="book.title">
+                    </div>
+                    <div class="book-info">
+                        <h3 class="book-title">{{ book.title }}</h3>
+                        <p class="book-author">{{ book.author }}</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- New Releases -->
+        <section class="category-section">
+            <div class="section-header">
+                <h2>New Releases</h2>
+
+            </div>
+            <div class="book-row">
+                <div class="book-card" *ngFor="let book of (newReleases$ | async)">
+                    <div class="book-cover">
+                        <img [src]="book.coverPhoto" [alt]="book.title">
+                    </div>
+                    <div class="book-info">
+                        <h3 class="book-title">{{ book.title }}</h3>
+                        <p class="book-author">{{ book.author }}</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Trending -->
+        <section class="category-section">
+            <div class="section-header">
+                <h2>Trending This Week</h2>
+
+            </div>
+            <div class="book-row">
+                <div class="book-card" *ngFor="let book of (trending$ | async)">
+                    <div class="book-cover">
+                        <img [src]="book.coverPhoto" [alt]="book.title">
+                    </div>
+                    <div class="book-info">
+                        <h3 class="book-title">{{ book.title }}</h3>
+                        <p class="book-author">{{ book.author }}</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+</div>
