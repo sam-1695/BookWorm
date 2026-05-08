@@ -1,55 +1,58 @@
 <div class="profile-page" *ngIf="currentUser">
   <header class="content-header">
     <div class="profile-section">
-      <label class="profile-avatar" title="Click to upload profile picture">
+      <div class="avatar-container">
+        <!-- Display Current or Temporary Preview -->
         <img
-          *ngIf="currentUser.profilePicture"
-          [src]="currentUser.profilePicture"
+          *ngIf="tempProfilePicture || currentUser.profilePicture"
+          [src]="tempProfilePicture || currentUser.profilePicture"
           [alt]="currentUser.username + ' profile picture'"
+          class="profile-image"
         />
+        <mat-icon *ngIf="!tempProfilePicture && !currentUser.profilePicture" class="placeholder-icon">person</mat-icon>
 
-        <mat-icon *ngIf="!currentUser.profilePicture">person</mat-icon>
-
-        <input
-          type="file"
-          accept="image/*"
-          hidden
-          (change)="onProfilePictureSelected($event)"
-        />
-      </label>
+        <!-- Upload Overlay (Only in Edit Mode) -->
+        <label class="upload-overlay" *ngIf="isEditing">
+          <mat-icon>photo_camera</mat-icon>
+          <span>Change</span>
+          <input
+            type="file"
+            accept="image/*"
+            hidden
+            (change)="onProfilePictureSelected($event)"
+          />
+        </label>
+      </div>
 
       <div class="profile-info">
-        <h2 class="username">{{ currentUser.username }}</h2>
-
-        <div *ngIf="!isEditingBio">
-          <p class="bio" *ngIf="bioText; else emptyBio">
-            {{ bioText }}
-          </p>
-
-          <ng-template #emptyBio>
-            <p class="bio empty-bio">No bio yet. Add one!</p>
-          </ng-template>
-
-          <button class="small-btn" type="button" (click)="startEditingBio()">
-            Edit Bio
+        <div class="name-row">
+          <h2 class="username">{{ currentUser.username }}</h2>
+          <button *ngIf="!isEditing" class="edit-profile-btn" (click)="startEditing()">
+            <mat-icon>edit</mat-icon>
+            Edit Profile
           </button>
         </div>
 
-        <div *ngIf="isEditingBio" class="bio-editor">
+        <div *ngIf="!isEditing">
+          <p class="bio" *ngIf="bioText; else emptyBio">
+            {{ bioText }}
+          </p>
+          <ng-template #emptyBio>
+            <p class="bio empty-bio">No bio yet. Tell the world about your reading habits!</p>
+          </ng-template>
+        </div>
+
+        <div *ngIf="isEditing" class="profile-editor">
           <textarea
             [(ngModel)]="bioText"
             rows="3"
             placeholder="Write something about yourself..."
+            class="bio-textarea"
           ></textarea>
 
-          <div class="bio-actions">
-            <button class="small-btn" type="button" (click)="saveBio()">
-              Save
-            </button>
-
-            <button class="small-btn secondary" type="button" (click)="cancelEditingBio()">
-              Cancel
-            </button>
+          <div class="edit-actions">
+            <button class="save-btn" (click)="saveProfile()">Save Changes</button>
+            <button class="cancel-link" (click)="cancelEditing()">Cancel</button>
           </div>
         </div>
 
@@ -61,7 +64,6 @@
 
     <div class="friends-section">
       <h3 class="section-label">friends</h3>
-
       <div class="friends-list">
 
         <a routerLink="/friends" class="friend-avatar more" title="Go to friends page">
@@ -109,48 +111,68 @@
   <!-- Recent Reads  -->
 
   <section class="recent-reads-section">
-  <h2 class="section-title">recent reads</h2>
-
-  <div class="add-recent-read-row">
-    <select [(ngModel)]="selectedRecentReadBookId">
-      <option value="">Choose a book to add</option>
-
-      <option
-        *ngFor="let book of availableBooks"
-        [value]="getBookId(book)"
-      >
-        {{ book.title }} by {{ book.author }}
-      </option>
-    </select>
-
-    <button type="button" class="small-btn" (click)="addRecentRead()">
-      Add Recent Read
-    </button>
-  </div>
-
-  <div class="horizontal-scroll" *ngIf="getRecentReads().length > 0; else noRecentReads">
-    <div class="recent-read-item" *ngFor="let read of getRecentReads()">
-      <button
-        type="button"
-        class="remove-recent-read"
-        (click)="removeRecentRead(read._id)"
-        title="Remove recent read"
-      >
-        ×
+    <div class="section-header">
+      <h2 class="section-title">recent reads</h2>
+      
+      <button class="toggle-add-btn" type="button" (click)="toggleAddRecentRead()">
+        <mat-icon>{{ isAddingRecentRead ? 'close' : 'add' }}</mat-icon>
+        {{ isAddingRecentRead ? 'Done' : 'Add Recent Read' }}
       </button>
-
-      <img
-        *ngIf="read.coverPhoto"
-        [src]="read.coverPhoto"
-        class="book-spine-img"
-        style="width: 30px; height: 40px; object-fit: cover; border-radius: 2px;"
-      >
-
-      <div *ngIf="!read.coverPhoto" class="book-spine"></div>
-
-      <span class="read-title">{{ read.title }}</span>
     </div>
-  </div>
+
+    <!-- Suggestion Gallery for Recent Reads -->
+    <div class="suggestion-gallery recent-reads-gallery" *ngIf="isAddingRecentRead">
+      <p class="suggestion-hint">Tap a cover to add to your recent reads:</p>
+      <div class="suggestion-row">
+        <!-- Shortcut to create a new book -->
+        <div class="suggestion-item create-new-item" routerLink="/create">
+          <div class="suggestion-cover-wrapper create-new-wrapper">
+            <mat-icon>add_circle_outline</mat-icon>
+            <span class="create-new-text">New Book</span>
+          </div>
+        </div>
+
+        <div class="suggestion-item" *ngFor="let book of getRecentReadSuggestions()" 
+             (click)="addRecentReadFromSuggestion(getBookId(book))">
+          <div class="suggestion-cover-wrapper">
+            <img *ngIf="book.coverPhoto" [src]="book.coverPhoto" [alt]="book.title" />
+            <div class="suggestion-placeholder" *ngIf="!book.coverPhoto">
+              <mat-icon>book</mat-icon>
+            </div>
+            <div class="add-overlay">
+              <mat-icon>add</mat-icon>
+            </div>
+          </div>
+          <span class="suggestion-title">{{ book.title }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="horizontal-scroll recent-reads-display" *ngIf="getRecentReads().length > 0; else noRecentReads">
+      <div class="book-cover-card" *ngFor="let read of getRecentReads()">
+        <button
+          type="button"
+          class="remove-book-button"
+          (click)="removeRecentRead(read._id)"
+          title="Remove recent read"
+        >
+          ×
+        </button>
+
+        <img
+          *ngIf="read.coverPhoto"
+          [src]="read.coverPhoto"
+          [alt]="read.title"
+        />
+
+        <div class="missing-cover" *ngIf="!read.coverPhoto">
+          <mat-icon>book</mat-icon>
+        </div>
+
+        <h3>{{ read.title }}</h3>
+        <p>{{ read.author }}</p>
+      </div>
+    </div>
 
   <ng-template #noRecentReads>
     <p class="empty-msg">No recent reads yet.</p>

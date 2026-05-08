@@ -19,6 +19,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
+import { MatSelectModule } from '@angular/material/select';
 import { FormsModule } from '@angular/forms';
 
 import { Profile } from './pages/profile/profile';
@@ -51,6 +52,7 @@ import { Login } from './pages/login/login';
     MatInputModule,
     MatToolbarModule,
     MatIconModule,
+    MatSelectModule,
     FormsModule,
 
     Login,

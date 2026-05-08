@@ -1,39 +1,62 @@
-<mat-card>
-    <form (submit)="onAddBook(formPost)" #formPost="ngForm">
-      <mat-form-field>
-        <mat-label>Title</mat-label>
-        <input matInput type="text" [(ngModel)]="enterTitle" name="title" #title="ngModel" required>
-        @if(title.invalid) {
-        <mat-error>Enter Title</mat-error>
-        }
-      </mat-form-field>
-  
-      <mat-form-field>
-        <mat-label>Author</mat-label>
-        <input matInput type="text" [(ngModel)]="enterAuthor" name="author" #author="ngModel" required>
-        @if(author.invalid) {
-        <mat-error>Enter Author</mat-error>
-        }
-      </mat-form-field>
+<div class="create-page-container">
+    <div class="form-wrapper">
+        <header class="form-header">
+            <h1>{{ mode === 'create' ? 'Add New Book' : 'Edit Book' }}</h1>
+            <p>Fill out the details below to update your collection.</p>
+        </header>
 
-      <mat-form-field>
-        <mat-label>Cover Photo URL</mat-label>
-        <input matInput type="text" [(ngModel)]="enterCoverPhoto" name="coverPhoto" #coverPhoto="ngModel">
-      </mat-form-field>
+        <mat-card class="premium-card">
+            <form (submit)="onAddBook(formPost)" #formPost="ngForm" class="book-form">
+                <div class="form-layout">
+                    <!-- Left Side: Preview -->
+                    <div class="preview-section">
+                        <div class="image-preview" *ngIf="enterCoverPhoto; else noImage">
+                            <img [src]="enterCoverPhoto" [alt]="enterTitle">
+                        </div>
+                        <ng-template #noImage>
+                            <div class="image-placeholder">
+                                <mat-icon>image_search</mat-icon>
+                                <p>Cover Preview</p>
+                            </div>
+                        </ng-template>
+                    </div>
 
-      <div class="image-preview" *ngIf="enterCoverPhoto">
-        <img [src]="enterCoverPhoto" [alt]="enterTitle" style="max-width: 200px; margin-bottom: 1rem;">
-      </div>
-  
-      <mat-form-field>
-        <mat-label>Description</mat-label>
-        <textarea matInput rows="6" [(ngModel)]="enterDescription" name="description" #description="ngModel" required>
-          </textarea>
-        @if(description.invalid) {
-        <mat-error>Enter Description</mat-error>
-        }
-      </mat-form-field>
-  
-      <button type='submit'>{{ mode === 'create' ? 'Save Book' : 'Update Book' }}</button>
-  </form>
-  </mat-card>
+                    <!-- Right Side: Fields -->
+                    <div class="fields-section">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Book Title</mat-label>
+                            <input matInput type="text" [(ngModel)]="enterTitle" name="title" #title="ngModel" required placeholder="e.g. The Great Gatsby">
+                            <mat-error *ngIf="title.invalid">Please enter a title</mat-error>
+                        </mat-form-field>
+
+                        <mat-form-field appearance="outline">
+                            <mat-label>Author Name</mat-label>
+                            <input matInput type="text" [(ngModel)]="enterAuthor" name="author" #author="ngModel" required placeholder="e.g. F. Scott Fitzgerald">
+                            <mat-error *ngIf="author.invalid">Please enter an author</mat-error>
+                        </mat-form-field>
+
+                        <mat-form-field appearance="outline">
+                            <mat-label>Cover Photo URL</mat-label>
+                            <input matInput type="text" [(ngModel)]="enterCoverPhoto" name="coverPhoto" #coverPhoto="ngModel" placeholder="https://example.com/cover.jpg">
+                            <mat-icon matSuffix>link</mat-icon>
+                        </mat-form-field>
+
+                        <mat-form-field appearance="outline">
+                            <mat-label>Description</mat-label>
+                            <textarea matInput rows="4" [(ngModel)]="enterDescription" name="description" #description="ngModel" required placeholder="Tell us about this book..."></textarea>
+                            <mat-error *ngIf="description.invalid">Please enter a description</mat-error>
+                        </mat-form-field>
+
+                        <div class="form-actions">
+                            <button type="submit" class="submit-btn" [disabled]="formPost.invalid">
+                                <mat-icon>save</mat-icon>
+                                {{ mode === 'create' ? 'Save Book' : 'Update Book' }}
+                            </button>
+                            <button type="button" class="cancel-btn" (click)="onCancel()">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </mat-card>
+    </div>
+</div>

@@ -1,21 +1,62 @@
-.header {
-  background-color: #6f4e37;
-  color: white;
-}
-
-.brand {
-  color: white;
-  text-decoration: none;
-  font-size: 24px;
-  font-weight: bold;
+.header-toolbar {
+  background-color: #6f4e37 !important; /* Rich brown background */
+  padding: 8px 32px !important;
+  height: 64px !important;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
 }
 
 .spacer {
-  flex: 1 1 auto;
+  flex: 1;
 }
 
-a {
-  color: white;
+.premium-brand {
+  font-family: 'Playfair Display', serif;
+  font-size: 24px;
+  font-weight: 700;
+  color: white !important; /* White text on brown bg */
   text-decoration: none;
-  margin-left: 8px;
+  letter-spacing: -0.5px;
+  transition: opacity 0.2s;
+}
+
+.premium-brand:hover {
+  opacity: 0.8;
+}
+
+.premium-logout-btn, .premium-login-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.15); /* Glassy white buttons */
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 6px 16px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.premium-logout-btn:hover, .premium-login-btn:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: translateY(-1px);
+}
+
+.premium-logout-btn mat-icon, .premium-login-btn mat-icon {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+}
+
+@media (max-width: 600px) {
+  .header-toolbar {
+    padding: 8px 16px !important;
+  }
+  .premium-brand {
+    font-size: 20px;
+  }
 }

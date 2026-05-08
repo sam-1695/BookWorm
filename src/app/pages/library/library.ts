@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
+import { ListService } from './list-service';
 import { Observable } from 'rxjs';
-
-import { ListService } from '../profile/list-service';
-import { BookList } from '../profile/list-interface';
-import { AuthService, CurrentUser } from '../../services/auth.service';
+import { BookList } from './list-interface';
+import { BookService } from '../../book/book-service';
 import { Book } from '../../book/book-interface';
 import { ReviewService } from '../../services/review.service';
+import { AuthService, CurrentUser } from '../../services/auth.service';
+import { Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-library',
@@ -16,33 +16,30 @@ import { ReviewService } from '../../services/review.service';
   styleUrl: './library.css',
 })
 export class Library implements OnInit {
-  currentUser: CurrentUser | null = null;
-
   lists$: Observable<BookList[]>;
-
   availableBooks: Book[] = [];
-
-  showCreateListForm = false;
-
-  newListName = '';
+  
+  newListName: string = '';
   selectedBookIds: string[] = [];
+showCreateListForm: boolean = false;
+  message: string = '';
+  errorMessage: string = '';
 
+  // Track which lists are in "Add Book" mode
+  isAdding: { [listId: string]: boolean } = {};
   selectedBookByListId: { [listId: string]: string } = {};
-
-  message = '';
-  errorMessage = '';
 
   // review state
   reviewingBookId: string | null = null;
   reviewRating: number = 0;
   reviewComment: string = '';
-  // Map of bookId -> review, so we can quickly check if a book is already reviewed
   reviewedBookMap: { [bookId: string]: any } = {};
 
   private booksApiUrl = 'http://localhost:3000/api/books';
 
   constructor(
     private listService: ListService,
+    private bookService: BookService,
     private authService: AuthService,
     private reviewService: ReviewService,
     private router: Router,
@@ -52,41 +49,13 @@ export class Library implements OnInit {
   }
 
   ngOnInit(): void {
-    this.currentUser = this.authService.getCurrentUser();
+    // We assume the user is logged in. In a real app, get user ID from AuthService.
+    const userId = localStorage.getItem('userId') || 'mock-user-id';
+    this.listService.fetchListsByUser(userId);
 
-    if (!this.currentUser) {
-      this.router.navigate(['/login']);
-      return;
-    }
-
-    this.loadBooks();
-    this.loadUserLists();
-  }
-
-  loadUserLists(): void {
-    if (!this.currentUser) {
-      return;
-    }
-
-    this.listService.fetchListsByUser(this.currentUser._id);
-  }
-
-  loadBooks(): void {
-    this.http.get<any[]>(this.booksApiUrl).subscribe({
-      next: (booksFromApi) => {
-        this.availableBooks = booksFromApi.map((book) => ({
-          _id: book._id,
-          id: book._id,
-          title: book.title,
-          author: book.author,
-          coverPhoto: book.coverPhoto,
-          description: book.description
-        }));
-      },
-      error: (err) => {
-        console.error('Error loading books:', err);
-        this.errorMessage = 'Could not load books from the database.';
-      }
+    this.bookService.getPosts();
+    this.bookService.getBookUpdateListener().subscribe((books: Book[]) => {
+      this.availableBooks = books;
     });
   }
 
@@ -112,110 +81,69 @@ export class Library implements OnInit {
     this.showCreateListForm = !this.showCreateListForm;
     this.message = '';
     this.errorMessage = '';
+    this.selectedBookIds = []; // Clear selection when toggling
+  }
+
+  toggleBookSelection(bookId: string): void {
+    const index = this.selectedBookIds.indexOf(bookId);
+    if (index > -1) {
+      this.selectedBookIds.splice(index, 1);
+    } else {
+      this.selectedBookIds.push(bookId);
+    }
+  }
+
+  isBookSelected(bookId: string): boolean {
+    return this.selectedBookIds.includes(bookId);
   }
 
   createList(): void {
-    if (!this.currentUser) {
-      this.router.navigate(['/login']);
-      return;
-    }
-
-    const name = this.newListName.trim();
-
-    if (!name) {
+    if (!this.newListName.trim()) {
       this.errorMessage = 'Please enter a list name.';
       return;
     }
 
-    this.listService.createList(
-      this.currentUser._id,
-      name,
-      this.selectedBookIds
-    ).subscribe({
+    const userId = localStorage.getItem('userId') || 'mock-user-id';
+    this.listService.createList(userId, this.newListName, this.selectedBookIds).subscribe({
       next: () => {
-        this.message = 'List created!';
-        this.errorMessage = '';
+        this.message = 'List created successfully!';
         this.newListName = '';
         this.selectedBookIds = [];
         this.showCreateListForm = false;
-
-        // Reload from backend so the page stays synced with MongoDB
-        this.loadUserLists();
       },
       error: (err) => {
-        console.error('Error creating list:', err);
-        this.errorMessage = 'Could not create the list.';
-      }
-    });
-  }
-
-  addBookToList(listId: string): void {
-    const bookId = this.selectedBookByListId[listId];
-
-    if (!bookId) {
-      this.errorMessage = 'Please choose a book to add.';
-      return;
-    }
-
-    this.listService.addBookToList(listId, bookId).subscribe({
-      next: () => {
-        this.message = 'Book added to list!';
-        this.errorMessage = '';
-        this.selectedBookByListId[listId] = '';
-
-        // Reload from backend so populated book covers update immediately
-        this.loadUserLists();
-      },
-      error: (err) => {
-        console.error('Error adding book to list:', err);
-        this.errorMessage = 'Could not add book to list.';
-      }
-    });
-  }
-
-  removeBookFromList(listId: string, bookId: string | undefined | null): void {
-    if (!bookId) {
-      return;
-    }
-
-    this.listService.removeBookFromList(listId, bookId).subscribe({
-      next: () => {
-        this.message = 'Book removed from list.';
-        this.errorMessage = '';
-
-        this.loadUserLists();
-      },
-      error: (err) => {
-        console.error('Error removing book from list:', err);
-        this.errorMessage = 'Could not remove book from list.';
+        this.errorMessage = 'Failed to create list.';
+        console.error(err);
       }
     });
   }
 
   deleteList(list: BookList): void {
-    if (list.name.toLowerCase() === 'favorites') {
-      this.errorMessage = 'The Favorites list cannot be deleted.';
-      return;
+    if (confirm(`Are you sure you want to delete the list "${list.name}"?`)) {
+      this.listService.deleteList(list._id).subscribe();
     }
-
-    this.listService.deleteList(list._id).subscribe({
-      next: () => {
-        this.message = 'List deleted.';
-        this.errorMessage = '';
-
-        this.loadUserLists();
-      },
-      error: (err) => {
-        console.error('Error deleting list:', err);
-        this.errorMessage = 'Could not delete list.';
-      }
-    });
   }
 
+  removeBookFromList(listId: string, bookId: string): void {
+    this.listService.removeBookFromList(listId, bookId).subscribe();
+  }
 
+  // Suggestion Gallery Helpers
+  toggleAdd(listId: string): void {
+    this.isAdding[listId] = !this.isAdding[listId];
+  }
 
-  // review methods
- 
+  getSuggestions(list: BookList): Book[] {
+    const listBookIds = list.books.map(b => this.getBookId(b));
+    return this.availableBooks.filter(b => !listBookIds.includes(this.getBookId(b))).slice(0, 8);
+  }
+
+  addSuggestionToList(listId: string, bookId: string): void {
+    this.listService.addBookToList(listId, bookId).subscribe();
+  }
+
+// review methods
+
   openReviewForm(bookId: string): void {
     this.reviewingBookId = this.reviewingBookId === bookId ? null : bookId;
     this.reviewRating = 5;
@@ -223,15 +151,15 @@ export class Library implements OnInit {
     this.message = '';
     this.errorMessage = '';
   }
- 
+
   submitReview(bookId: string): void {
     if (!this.currentUser) return;
- 
+
     if (!this.reviewRating || this.reviewRating < 1 || this.reviewRating > 5) {
       this.errorMessage = 'Please enter a rating between 1 and 5.';
       return;
     }
- 
+
     this.reviewService.createReview(
       this.currentUser._id,
       bookId,
@@ -251,24 +179,20 @@ export class Library implements OnInit {
       },
     });
   }
- 
+
   cancelReview(): void {
     this.reviewingBookId = null;
     this.reviewRating = 5;
     this.reviewComment = '';
   }
 
-  // Returns the existing review for a book, or null if not reviewed yet
   getExistingReview(bookId: string): any {
     return this.reviewedBookMap[bookId] || null;
   }
-  
-
-
 
   // helper methods
 
-  getBookId(book: Book): string {
+  getBookId(book: any): string {
     return book._id || book.id || '';
   }
 

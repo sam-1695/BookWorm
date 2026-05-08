@@ -19,6 +19,7 @@ export class Friends implements OnInit {
   // All users in the DB, filtered down by the search box
   allUsers: any[] = [];
   searchQuery: string = '';
+  isSearching: boolean = false;
 
   // Simple status message shown after an action
   statusMessage: string = '';
@@ -167,6 +168,13 @@ export class Friends implements OnInit {
   }
 
   // ─── UI helpers ──────────────────────────────────────────────────────────────
+
+  toggleSearch(): void {
+    this.isSearching = !this.isSearching;
+    if (!this.isSearching) {
+      this.searchQuery = '';
+    }
+  }
 
   private showMessage(msg: string, isError = false): void {
     this.statusMessage = msg;
