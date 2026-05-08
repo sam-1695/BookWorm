@@ -34,6 +34,7 @@ showCreateListForm: boolean = false;
   reviewRating: number = 0;
   reviewComment: string = '';
   reviewedBookMap: { [bookId: string]: any } = {};
+  currentUser: any = null; ///////////////////////////////////
 
   private booksApiUrl = 'http://localhost:3000/api/books';
 
@@ -50,6 +51,7 @@ showCreateListForm: boolean = false;
 
   ngOnInit(): void {
     // We assume the user is logged in. In a real app, get user ID from AuthService.
+    this.currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');//////////////////////
     const userId = localStorage.getItem('userId') || 'mock-user-id';
     this.listService.fetchListsByUser(userId);
 
