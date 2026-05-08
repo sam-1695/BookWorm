@@ -42,6 +42,7 @@ npm run start
 ```
 
 The app runs at http://localhost:4200 and the API runs at https://bookworm-backend-pl2t.onrender.com.
+The application is deployed using AWS at: https://main.d2dv513g3dqsr1.amplifyapp.com/login 
 
 ## Development server
 
