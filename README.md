@@ -41,7 +41,7 @@ Start the frontend:
 npm run start
 ```
 
-The app runs at http://localhost:4200 and the API runs at http://localhost:3000.
+The app runs at http://localhost:4200 and the API runs at https://bookworm-backend-pl2t.onrender.com.
 
 ## Development server
 
