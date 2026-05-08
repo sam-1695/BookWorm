@@ -2,6 +2,8 @@
 
 BookWorm is a full-stack book tracking app where users can log books they've read, create reading lists, write reviews, and add friends to see their reading activity.
 
+Presentation YouTube link: https://youtu.be/cIZuJz2n__A 
+
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.7.
 
 ## Deployment
