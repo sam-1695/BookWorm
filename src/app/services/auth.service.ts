@@ -22,7 +22,7 @@ interface LoginResponse {
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'http://localhost:3000/api/users';
+  private apiUrl = 'https://bookworm-backend-pl2t.onrender.com/api/users';
 
   private currentUserSubject = new BehaviorSubject<CurrentUser | null>(this.getUserFromStorage());
   currentUser$ = this.currentUserSubject.asObservable();
