@@ -30,7 +30,7 @@ export class Profile implements OnInit {
 
   userReviews: any[] = [];
 
-  private booksApiUrl = 'http://localhost:3000/api/books';
+  private booksApiUrl = 'https://bookworm-backend-pl2t.onrender.com/api/books';
 
   constructor(
     private listService: ListService,
