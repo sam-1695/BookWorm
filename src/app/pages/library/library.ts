@@ -5,7 +5,7 @@ import { BookList } from './list-interface';
 import { BookService } from '../../book/book-service';
 import { Book } from '../../book/book-interface';
 import { ReviewService } from '../../services/review.service';
-import { AuthService, CurrentUser } from '../../services/auth.service';
+import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 
@@ -18,10 +18,10 @@ import { HttpClient } from '@angular/common/http';
 export class Library implements OnInit {
   lists$: Observable<BookList[]>;
   availableBooks: Book[] = [];
-  
+
   newListName: string = '';
   selectedBookIds: string[] = [];
-showCreateListForm: boolean = false;
+  showCreateListForm: boolean = false;
   message: string = '';
   errorMessage: string = '';
 
@@ -29,12 +29,13 @@ showCreateListForm: boolean = false;
   isAdding: { [listId: string]: boolean } = {};
   selectedBookByListId: { [listId: string]: string } = {};
 
-  // review state
+  // Review state
   reviewingBookId: string | null = null;
   reviewRating: number = 0;
   reviewComment: string = '';
   reviewedBookMap: { [bookId: string]: any } = {};
-  currentUser: any = null; ///////////////////////////////////
+
+  currentUser: any = null;
 
   private booksApiUrl = 'https://bookworm-backend-pl2t.onrender.com/api/books';
 
@@ -50,32 +51,61 @@ showCreateListForm: boolean = false;
   }
 
   ngOnInit(): void {
-    // We assume the user is logged in. In a real app, get user ID from AuthService.
-    this.currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');//////////////////////
-    const userId = localStorage.getItem('userId') || 'mock-user-id';
-    this.listService.fetchListsByUser(userId);
+    this.currentUser = this.authService.getCurrentUser();
 
-    this.bookService.getPosts();
-    this.bookService.getBookUpdateListener().subscribe((books: Book[]) => {
-      this.availableBooks = books;
+    if (!this.currentUser) {
+      this.router.navigate(['/login']);
+      return;
+    }
+
+    this.listService.clearLists();
+
+    this.loadBooks();
+    this.loadUserLists();
+    this.loadUserReviews();
+  }
+
+  loadBooks(): void {
+    this.http.get<Book[]>(this.booksApiUrl).subscribe({
+      next: (booksFromApi) => {
+        this.availableBooks = booksFromApi;
+      },
+      error: (err) => {
+        console.error('Error loading books:', err);
+        this.errorMessage = 'Could not load books.';
+      }
     });
+  }
+
+  loadUserLists(): void {
+    if (!this.currentUser) {
+      return;
+    }
+
+    this.listService.fetchListsByUser(this.currentUser._id);
   }
 
   // Load the current user's reviews and build a bookId -> review map
   loadUserReviews(): void {
-    if (!this.currentUser) return;
- 
+    if (!this.currentUser) {
+      return;
+    }
+
     this.reviewService.getReviewsByUser(this.currentUser._id).subscribe({
       next: (reviews) => {
         this.reviewedBookMap = {};
+
         reviews.forEach((review) => {
           const bookId = review.bookId?._id || review.bookId;
+
           if (bookId) {
             this.reviewedBookMap[bookId] = review;
           }
         });
       },
-      error: (err) => console.error('Error loading user reviews:', err)
+      error: (err) => {
+        console.error('Error loading user reviews:', err);
+      }
     });
   }
 
@@ -83,11 +113,12 @@ showCreateListForm: boolean = false;
     this.showCreateListForm = !this.showCreateListForm;
     this.message = '';
     this.errorMessage = '';
-    this.selectedBookIds = []; // Clear selection when toggling
+    this.selectedBookIds = [];
   }
 
   toggleBookSelection(bookId: string): void {
     const index = this.selectedBookIds.indexOf(bookId);
+
     if (index > -1) {
       this.selectedBookIds.splice(index, 1);
     } else {
@@ -100,34 +131,63 @@ showCreateListForm: boolean = false;
   }
 
   createList(): void {
+    if (!this.currentUser) {
+      this.router.navigate(['/login']);
+      return;
+    }
+
     if (!this.newListName.trim()) {
       this.errorMessage = 'Please enter a list name.';
       return;
     }
 
-    const userId = localStorage.getItem('userId') || 'mock-user-id';
-    this.listService.createList(userId, this.newListName, this.selectedBookIds).subscribe({
+    this.listService.createList(
+      this.currentUser._id,
+      this.newListName,
+      this.selectedBookIds
+    ).subscribe({
       next: () => {
         this.message = 'List created successfully!';
+        this.errorMessage = '';
         this.newListName = '';
         this.selectedBookIds = [];
         this.showCreateListForm = false;
+
+        this.loadUserLists();
       },
       error: (err) => {
         this.errorMessage = 'Failed to create list.';
-        console.error(err);
+        console.error('Error creating list:', err);
       }
     });
   }
 
   deleteList(list: BookList): void {
     if (confirm(`Are you sure you want to delete the list "${list.name}"?`)) {
-      this.listService.deleteList(list._id).subscribe();
+      this.listService.deleteList(list._id).subscribe({
+        next: () => {
+          this.message = 'List deleted.';
+          this.errorMessage = '';
+        },
+        error: (err) => {
+          console.error('Error deleting list:', err);
+          this.errorMessage = 'Could not delete list.';
+        }
+      });
     }
   }
 
   removeBookFromList(listId: string, bookId: string): void {
-    this.listService.removeBookFromList(listId, bookId).subscribe();
+    this.listService.removeBookFromList(listId, bookId).subscribe({
+      next: () => {
+        this.message = 'Book removed from list.';
+        this.errorMessage = '';
+      },
+      error: (err) => {
+        console.error('Error removing book from list:', err);
+        this.errorMessage = 'Could not remove book from list.';
+      }
+    });
   }
 
   // Suggestion Gallery Helpers
@@ -136,16 +196,27 @@ showCreateListForm: boolean = false;
   }
 
   getSuggestions(list: BookList): Book[] {
-    const listBookIds = list.books.map(b => this.getBookId(b));
-    return this.availableBooks.filter(b => !listBookIds.includes(this.getBookId(b))).slice(0, 8);
+    const listBookIds = list.books.map((book) => this.getBookId(book));
+
+    return this.availableBooks
+      .filter((book) => !listBookIds.includes(this.getBookId(book)))
+      .slice(0, 8);
   }
 
   addSuggestionToList(listId: string, bookId: string): void {
-    this.listService.addBookToList(listId, bookId).subscribe();
+    this.listService.addBookToList(listId, bookId).subscribe({
+      next: () => {
+        this.message = 'Book added to list.';
+        this.errorMessage = '';
+      },
+      error: (err) => {
+        console.error('Error adding book to list:', err);
+        this.errorMessage = 'Could not add book to list.';
+      }
+    });
   }
 
-// review methods
-
+  // Review methods
   openReviewForm(bookId: string): void {
     this.reviewingBookId = this.reviewingBookId === bookId ? null : bookId;
     this.reviewRating = 5;
@@ -155,7 +226,9 @@ showCreateListForm: boolean = false;
   }
 
   submitReview(bookId: string): void {
-    if (!this.currentUser) return;
+    if (!this.currentUser) {
+      return;
+    }
 
     if (!this.reviewRating || this.reviewRating < 1 || this.reviewRating > 5) {
       this.errorMessage = 'Please enter a rating between 1 and 5.';
@@ -170,6 +243,7 @@ showCreateListForm: boolean = false;
     ).subscribe({
       next: (newReview) => {
         this.message = 'Review submitted!';
+        this.errorMessage = '';
         this.reviewingBookId = null;
         this.reviewRating = 5;
         this.reviewComment = '';
@@ -192,8 +266,7 @@ showCreateListForm: boolean = false;
     return this.reviewedBookMap[bookId] || null;
   }
 
-  // helper methods
-
+  // Helper methods
   getBookId(book: any): string {
     return book._id || book.id || '';
   }
